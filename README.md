@@ -58,15 +58,15 @@ Every AI system, from a laptop demo to a 100k-GPU cluster, is these nine layers.
 
 ```mermaid
 flowchart LR
-    L0["**L0**<br/>Hardware<br/><i>GPU · NVLink · IB</i>"]
-    L1["**L1**<br/>Runtime<br/><i>CUDA · NCCL · Triton</i>"]
-    L2["**L2**<br/>Training<br/><i>PyTorch · FSDP · LoRA</i>"]
-    L3["**L3**<br/>Inference<br/><i>vLLM · SGLang · quant</i>"]
-    L4["**L4**<br/>Data<br/><i>S3 · Iceberg · Ray</i>"]
-    L5["**L5**<br/>Orchestration<br/><i>K8s · Slurm · Ray</i>"]
-    L6["**L6**<br/>Retrieval<br/><i>vectors · rerank · RAG</i>"]
-    L7["**L7**<br/>App & Agents<br/><i>gateway · MCP · sandbox</i>"]
-    L8["**L8**<br/>Observability<br/><i>traces · evals · safety</i>"]
+    L0["L0 · Hardware<br/><i>GPU · NVLink · IB</i>"]
+    L1["L1 · Runtime<br/><i>CUDA · NCCL · Triton</i>"]
+    L2["L2 · Training<br/><i>PyTorch · FSDP · LoRA</i>"]
+    L3["L3 · Inference<br/><i>vLLM · SGLang · quant</i>"]
+    L4["L4 · Data<br/><i>S3 · Iceberg · Ray</i>"]
+    L5["L5 · Orchestration<br/><i>K8s · Slurm · Ray</i>"]
+    L6["L6 · Retrieval<br/><i>vectors · rerank · RAG</i>"]
+    L7["L7 · App & Agents<br/><i>gateway · MCP · sandbox</i>"]
+    L8["L8 · Observability<br/><i>traces · evals · safety</i>"]
 
     L0 --> L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8
 ```
