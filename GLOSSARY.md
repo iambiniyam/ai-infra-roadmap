@@ -1,6 +1,6 @@
 # Glossary
 
-140+ terms, one line each, grouped by layer. Alphabetical within groups.
+Over 200 terms, one line each, grouped by layer. Alphabetical within groups.
 
 ---
 

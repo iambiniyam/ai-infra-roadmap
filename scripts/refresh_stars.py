@@ -20,6 +20,7 @@ which is usually enough because repos are deduplicated and batched.
 from __future__ import annotations
 
 import argparse
+import datetime as dt
 import json
 import os
 import pathlib
@@ -38,6 +39,13 @@ ROW_RE = re.compile(
     r"(?P<owner>[A-Za-z0-9_.-]+)/(?P<repo>[A-Za-z0-9_.-]+)\)\s*\|"
     r"\s*(?P<stars>~?[\d.,]+k?)\s*\|"
 )
+
+# Lines that advertise when the data was last refreshed. Keeping these in sync
+# with the actual run stops the docs from quietly going stale.
+DATE_PATTERNS = [
+    re.compile(r"(\*\*Last full data refresh:\*\* )(\d{4}-\d{2}-\d{2})"),
+    re.compile(r"(pulled from the GitHub API on \*\*)(\d{4}-\d{2}-\d{2})(\*\*)"),
+]
 
 
 def md_files() -> list[pathlib.Path]:
@@ -118,10 +126,20 @@ def main() -> int:
     print(f"Fetched {len(counts)}/{len(current)} repositories.")
 
     stale: list[str] = []
+    today = dt.datetime.now(dt.timezone.utc).date().isoformat()
     for path in files:
         lines = path.read_text(encoding="utf-8").splitlines(keepends=True)
         changed = False
         for idx, line in enumerate(lines):
+            for pattern in DATE_PATTERNS:
+                if pattern.search(line):
+                    new_line = pattern.sub(
+                        lambda m: m.group(1) + today + (m.group(3) if m.lastindex == 3 else ""),
+                        line,
+                    )
+                    if new_line != line:
+                        lines[idx] = line = new_line
+                        changed = True
             m = ROW_RE.match(line)
             if not m:
                 continue

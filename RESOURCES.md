@@ -179,7 +179,7 @@ Read in this order. You don't need every paper to start, but you should be able 
 | [MLPerf](https://mlcommons.org/benchmarks/) | Training & inference throughput | Compare hardware apples-to-apples |
 | [InferenceMAX](https://inferencemax.ai/) | Production inference economics | Compare serving stacks and $/token |
 | [Chatbot Arena-style human evals](https://lmarena.ai/) | Subjective preference | Sanity-check eval suites |
-| [Terminal-Bench](https://github.com/laude-institute/terminal-bench) | Agent terminal tasks | Evaluate agent scaffolds, not just models |
+| [Terminal-Bench](https://github.com/harbor-framework/terminal-bench-1) | Agent terminal tasks | Evaluate agent scaffolds, not just models |
 
 **A warning about leaderboards:** they measure *the benchmark*, not your workload. Contamination, prompt sensitivity, and version drift are real. Always hold out your own eval set; see [P3](PROJECTS.md#p3--fine-tune-with-an-eval-gate) and [P15](PROJECTS.md#p15--eval--red-team-pipeline-in-ci).
 
@@ -198,7 +198,7 @@ Read in this order. You don't need every paper to start, but you should be able 
 | [BEIR](https://github.com/beir-cellar/beir) | Retrieval generalization |
 | [LibriSpeech](https://www.openslr.org/12) / [Common Voice](https://commonvoice.mozilla.org/) | Speech |
 | [LAION](https://laion.ai/) / [COCO](https://cocodataset.org/) | Image-text |
-| [GSM8K](https://github.com/openai/grade-school-math) / [MATH](https://github.com/hendrycks/math) | Reasoning eval |
+| [GSM8K](https://huggingface.co/datasets/openai/gsm8k) / [MATH](https://github.com/hendrycks/math) | Reasoning eval |
 
 ---
 

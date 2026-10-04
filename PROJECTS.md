@@ -362,7 +362,7 @@ Deliverables:
 
 Deliverables:
 
-- CI pipeline: eval suite ([lighteval](https://github.com/huggingface/lighteval)/[DeepEval](https://github.com/confident-ai/deepeval)/[Ragas](https://github.com/explodinggradients/ragas)) + red-team pass ([garak](https://github.com/NVIDIA/garak), [promptfoo](https://github.com/promptfoo/promptfoo)).
+- CI pipeline: eval suite ([lighteval](https://github.com/huggingface/lighteval)/[DeepEval](https://github.com/confident-ai/deepeval)/[Ragas](https://github.com/vibrantlabsai/ragas)) + red-team pass ([garak](https://github.com/NVIDIA/garak), [promptfoo](https://github.com/promptfoo/promptfoo)).
 - A threshold that blocks a bad model, demonstrated.
 - A regression alert wired to your tracker.
 

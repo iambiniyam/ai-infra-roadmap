@@ -1,6 +1,6 @@
 # The Stack
 
-~200 open-source projects, organized by the [9 layers](README.md#the-map). Star counts and licenses were pulled from the GitHub API on **2026-10-04** and are refreshed weekly by [`scripts/refresh_stars.py`](scripts/refresh_stars.py).
+Over 200 open-source projects, organized by the [9 layers](README.md#the-map). Star counts and licenses were pulled from the GitHub API on **2026-10-04** and are refreshed weekly by [`scripts/refresh_stars.py`](scripts/refresh_stars.py).
 
 **How to read this:** each layer starts with a short "decision notes" block, the mental model for choosing, followed by the table. `Stars` column is a rough popularity signal, **not** a quality score. A 2k-star project that solves your exact problem beats a 90k-star project that doesn't.
 
@@ -17,7 +17,7 @@
 | [NVIDIA/gpu-operator](https://github.com/NVIDIA/gpu-operator) | 2,891 | Apache-2.0 | Turns a K8s node into a GPU node: drivers, container toolkit, DCGM, device plugin, MIG. Start here on K8s. |
 | [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) | 3,887 | Apache-2.0 | Exposes GPUs to the kubelet. Understand it when pods can't see GPUs. |
 | [NVIDIA/DCGM](https://github.com/NVIDIA/DCGM) | 797 | Apache-2.0 | GPU telemetry and health: utilization, ECC, XID, clocks, power. The source of truth for GPU fleets. |
-| [ROCm/ROCm](https://github.com/ROCm/ROCm) | 6,821 | MIT | AMD's CUDA alternative. Real option for inference; check model coverage before committing. |
+| [ROCm/ROCm](https://github.com/ROCm/ROCm) | 6,820 | MIT | AMD's CUDA alternative. Real option for inference; check model coverage before committing. |
 | [aws-neuron/aws-neuron-sdk](https://github.com/aws-neuron/aws-neuron-sdk) | 638 | NOASSERTION | Trainium/Inferentia. Best $/token for some workloads; narrow op coverage. |
 | [NVIDIA/cccl](https://github.com/NVIDIA/cccl) | 2,526 | NOASSERTION | CUDA Core Compute Libraries (Thrust/CUB/cuSPARSE...). Shows up in kernel work. |
 | [microsoft/pai](https://github.com/microsoft/pai) | 2,697 | MIT | Open-source cluster manager for AI from Microsoft Research. Useful prior art for schedulers. |
@@ -73,10 +73,10 @@
 | [pytorch/torchtitan](https://github.com/pytorch/torchtitan) | 5,777 | BSD-3-Clause | PyTorch-native platform for generative-model pretraining. The PyTorch-team-blessed path. |
 | [hpcaitech/ColossalAI](https://github.com/hpcaitech/ColossalAI) | 41,440 | Apache-2.0 | Unified parallelism (Gemini, 3D, MoE). Good if DeepSpeed/Megatron don't fit. |
 | [Lightning-AI/pytorch-lightning](https://github.com/Lightning-AI/pytorch-lightning) | 31,374 | Apache-2.0 | Removes boilerplate; strong multi-GPU ergonomics. |
-| [jax-ml/jax](https://github.com/jax-ml/jax) | 36,369 | Apache-2.0 | Composable transforms, `shard_map`, SPMD. The TPU/Google path. |
+| [jax-ml/jax](https://github.com/jax-ml/jax) | 36,370 | Apache-2.0 | Composable transforms, `shard_map`, SPMD. The TPU/Google path. |
 | [google/flax](https://github.com/google/flax) | 7,333 | Apache-2.0 | Neural-net library for JAX. |
 | [keras-team/keras](https://github.com/keras-team/keras) | 64,347 | Apache-2.0 | Multi-backend (JAX/TF/PyTorch). Good for pedagogy and small scale. |
-| [unslothai/unsloth](https://github.com/unslothai/unsloth) | 77,182 | Apache-2.0 | Fastest path to a working LoRA/QLoRA fine-tune; big memory savings. |
+| [unslothai/unsloth](https://github.com/unslothai/unsloth) | 77,181 | Apache-2.0 | Fastest path to a working LoRA/QLoRA fine-tune; big memory savings. |
 | [hiyouga/LlamaFactory](https://github.com/hiyouga/LlamaFactory) | 75,298 | Apache-2.0 | Unified fine-tuning for 100+ LLMs/VLMs, config-driven. Great for teams. |
 | [axolotl-ai-cloud/axolotl](https://github.com/axolotl-ai-cloud/axolotl) | 12,513 | Apache-2.0 | YAML-configured fine-tuning; popular for reproducible SFT/DPO recipes. |
 | [meta-pytorch/torchtune](https://github.com/meta-pytorch/torchtune) | 5,811 | BSD-3-Clause | PyTorch-native post-training library. Clean, hackable. |
@@ -87,7 +87,7 @@
 | [linkedin/Liger-Kernel](https://github.com/linkedin/Liger-Kernel) | 6,644 | BSD-2-Clause | Triton kernels that cut training memory and raise throughput. Free wins. |
 | [karpathy/nanoGPT](https://github.com/karpathy/nanoGPT) | 63,523 | MIT | Minimal GPT training. The best "learn by reading" codebase. |
 | [karpathy/llm.c](https://github.com/karpathy/llm.c) | 31,094 | MIT | GPT-2 training in raw C/CUDA. Read it to see what PyTorch hides. |
-| [NVIDIA-NeMo/NeMo](https://github.com/NVIDIA-NeMo/NeMo) | 18,540 | Apache-2.0 | Full-stack framework for LLM/multimodal/speech training and customization. |
+| [NVIDIA-NeMo/NeMo](https://github.com/NVIDIA-NeMo/NeMo) | 18,539 | Apache-2.0 | Full-stack framework for LLM/multimodal/speech training and customization. |
 
 ---
 
@@ -100,9 +100,9 @@
 | [vllm-project/vllm](https://github.com/vllm-project/vllm) | 93,132 | Apache-2.0 | The default LLM server. PagedAttention, continuous batching, wide model/hardware support. |
 | [sgl-project/sglang](https://github.com/sgl-project/sglang) | 36,757 | Apache-2.0 | RadixAttention prefix caching + structured output. Often wins on shared-prefix workloads. |
 | [NVIDIA/TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM) | 14,762 | NOASSERTION | Highest NVIDIA throughput after engineering effort. Build step is real. |
-| [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | 130,236 | MIT | Runs everywhere; GGUF quantization; the "does it fit" baseline. |
-| [ollama/ollama](https://github.com/ollama/ollama) | 182,129 | MIT | One-command local models. Great for dev, not for serving at scale. |
-| [huggingface/text-generation-inference](https://github.com/huggingface/text-generation-inference) | 10,882 | Apache-2.0 | HF's serving stack. Check activity before adopting in 2026. |
+| [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | 130,237 | MIT | Runs everywhere; GGUF quantization; the "does it fit" baseline. |
+| [ollama/ollama](https://github.com/ollama/ollama) | 182,131 | MIT | One-command local models. Great for dev, not for serving at scale. |
+| [huggingface/text-generation-inference](https://github.com/huggingface/text-generation-inference) | 10,882 | Apache-2.0 | **Archived in 2026.** Historically influential, but use vLLM or SGLang for new deployments. |
 | [InternLM/lmdeploy](https://github.com/InternLM/lmdeploy) | 8,106 | Apache-2.0 | Efficient serving with strong Chinese-model and edge coverage. |
 | [microsoft/BitNet](https://github.com/microsoft/BitNet) | 40,362 | MIT | 1-bit/1.58-bit inference. Watch the accuracy trade carefully. |
 | [turboderp-org/exllamav2](https://github.com/turboderp-org/exllamav2) | 4,631 | MIT | Fast local inference for consumer GPUs with EXL2 quantization. |
@@ -113,8 +113,8 @@
 | [bentoml/BentoML](https://github.com/bentoml/BentoML) | 8,875 | Apache-2.0 | Build/serve AI apps and inference APIs; good ergonomics for custom pipelines. |
 | [bentoml/OpenLLM](https://github.com/bentoml/OpenLLM) | 12,552 | Apache-2.0 | Run any open LLM as an OpenAI-compatible API. |
 | [vllm-project/llm-compressor](https://github.com/vllm-project/llm-compressor) | 3,840 | Apache-2.0 | Production quantization (FP8, INT8, INT4, W4A16) built for vLLM. |
-| [AutoGPTQ/AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ) | 5,066 | MIT | Classic GPTQ quantization. Somewhat legacy; still widely used. |
-| [casper-hansen/AutoAWQ](https://github.com/casper-hansen/AutoAWQ) | 2,347 | MIT | AWQ 4-bit quantization. Strong quality/speed trade. |
+| [AutoGPTQ/AutoGPTQ](https://github.com/AutoGPTQ/AutoGPTQ) | 5,066 | MIT | **Archived.** The maintained successor is [GPTQModel](https://github.com/ModelCloud/GPTQModel). |
+| [casper-hansen/AutoAWQ](https://github.com/casper-hansen/AutoAWQ) | 2,347 | MIT | **Archived.** For new work use [llm-compressor](https://github.com/vllm-project/llm-compressor) or GPTQModel. |
 | [bitsandbytes-foundation/bitsandbytes](https://github.com/bitsandbytes-foundation/bitsandbytes) | 8,510 | MIT | 8-bit/4-bit primitives used across the fine-tuning ecosystem. |
 | [nunchux-ai/nunchaku](https://github.com/nunchux-ai/nunchaku) | 3,958 | Apache-2.0 | SVDQuant 4-bit diffusion inference. |
 | [thu-ml/SageAttention](https://github.com/thu-ml/SageAttention) | 3,957 | Apache-2.0 | Quantized attention with big speedups. Drop-in wins for long context. |
@@ -134,7 +134,9 @@
 
 | Project | Stars | License | Notes |
 |---|---:|---|---|
-| [minio/minio](https://github.com/minio/minio) | 61,342 | AGPL-3.0 | S3-compatible object store for on-prem. AGPL, so check your use case. |
+| [minio/minio](https://github.com/minio/minio) | 61,342 | AGPL-3.0 | **Archived in 2026.** Widely deployed, but plan a migration; see SeaweedFS and RustFS below. |
+| [seaweedfs/seaweedfs](https://github.com/seaweedfs/seaweedfs) | 35,227 | Apache-2.0 | Distributed object store (S3), file system, and blob store. The most established MinIO alternative. |
+| [rustfs/rustfs](https://github.com/rustfs/rustfs) | 34,362 | Apache-2.0 | Rust S3-compatible object storage. Fast-moving alternative for new on-prem deployments. |
 | [ceph/ceph](https://github.com/ceph/ceph) | 17,091 | NOASSERTION | Distributed object/block/file storage. Heavy but battle-tested. |
 | [juicedata/juicefs](https://github.com/juicedata/juicefs) | 14,494 | Apache-2.0 | POSIX FS on top of object storage + Redis. Great for shared training data. |
 | [Alluxio/alluxio](https://github.com/Alluxio/alluxio) | 7,247 | Apache-2.0 | Data orchestration/caching between storage and compute. |
@@ -155,9 +157,9 @@
 | [HumanSignal/label-studio](https://github.com/HumanSignal/label-studio) | 28,397 | Apache-2.0 | Multi-type labeling/annotation. The industry default. |
 | [argilla-io/argilla](https://github.com/argilla-io/argilla) | 5,137 | Apache-2.0 | Human-in-the-loop data curation for LLMs. |
 | [Unstructured-IO/unstructured](https://github.com/Unstructured-IO/unstructured) | 15,527 | Apache-2.0 | Document ETL into structured data. |
-| [docling-project/docling](https://github.com/docling-project/docling) | 68,342 | MIT | Best-in-class document → structured markdown for RAG. |
+| [docling-project/docling](https://github.com/docling-project/docling) | 68,343 | MIT | Best-in-class document → structured markdown for RAG. |
 | [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) | 90,561 | Apache-2.0 | OCR for PDFs/images in 100+ languages. |
-| [opendataloader-project/opendataloader-pdf](https://github.com/opendataloader-project/opendataloader-pdf) | 29,458 | Apache-2.0 | PDF → AI-ready data with layout awareness. |
+| [opendataloader-project/opendataloader-pdf](https://github.com/opendataloader-project/opendataloader-pdf) | 29,457 | Apache-2.0 | PDF → AI-ready data with layout awareness. |
 
 **Also worth knowing:** [MosaicML Streaming](https://github.com/mosaicml/streaming) and [WebDataset](https://github.com/webdataset/webdataset) (sharded training formats), [Daft](https://github.com/Eventual-Inc/Daft) and [Ray Data](https://github.com/ray-project/ray) (distributed multimodal preprocessing), [LitData](https://github.com/Lightning-AI/litdata), [Petastorm](https://github.com/uber/petastorm).
 
@@ -192,7 +194,7 @@
 | [dstackai/dstack](https://github.com/dstackai/dstack) | 2,271 | MPL-2.0 | Unified orchestration across heterogeneous AI compute, dev-friendly. |
 | [facebookincubator/submitit](https://github.com/facebookincubator/submitit) | 1,641 | MIT | Submit Python jobs to Slurm from a laptop. Small and brilliant. |
 | [helm/helm](https://github.com/helm/helm) | 30,299 | Apache-2.0 | K8s package manager. |
-| [hashicorp/terraform](https://github.com/hashicorp/terraform) | 49,822 | NOASSERTION | Infrastructure as code. Note the BUSL license change. |
+| [hashicorp/terraform](https://github.com/hashicorp/terraform) | 49,823 | NOASSERTION | Infrastructure as code. Note the BUSL license change. |
 
 ---
 
@@ -211,7 +213,7 @@
 | [lancedb/lancedb](https://github.com/lancedb/lancedb) | 11,595 | Apache-2.0 | Embedded multimodal vector+columnar store. Pairs with Lance. |
 | [opensearch-project/OpenSearch](https://github.com/opensearch-project/OpenSearch) | 13,806 | Apache-2.0 | Full-text + vector hybrid at scale; the AWS-backed fork. |
 | [elastic/elasticsearch](https://github.com/elastic/elasticsearch) | 78,184 | NOASSERTION | The incumbent search engine; hybrid search is mature. |
-| [meilisearch/meilisearch](https://github.com/meilisearch/meilisearch) | 59,481 | NOASSERTION | Fast, ergonomic search API for product-facing search. |
+| [meilisearch/meilisearch](https://github.com/meilisearch/meilisearch) | 59,482 | NOASSERTION | Fast, ergonomic search API for product-facing search. |
 | [typesense/typesense](https://github.com/typesense/typesense) | 26,631 | GPL-3.0 | Low-ops search alternative to Algolia. |
 | [vespa-engine/vespa](https://github.com/vespa-engine/vespa) | 7,118 | Apache-2.0 | Industrial-strength ranking + vectors. Steeper, very powerful. |
 | [huggingface/sentence-transformers](https://github.com/huggingface/sentence-transformers) | 19,145 | Apache-2.0 | Embeddings + reranking. The default embedding toolkit. |
@@ -234,30 +236,31 @@
 
 | Project | Stars | License | Notes |
 |---|---:|---|---|
-| [BerriAI/litellm](https://github.com/BerriAI/litellm) | 60,094 | NOASSERTION | The default AI gateway: 100+ providers, OpenAI-compatible, budgets, fallbacks, cost tracking. |
+| [BerriAI/litellm](https://github.com/BerriAI/litellm) | 60,096 | NOASSERTION | The default AI gateway: 100+ providers, OpenAI-compatible, budgets, fallbacks, cost tracking. |
 | [Portkey-AI/gateway](https://github.com/Portkey-AI/gateway) | 13,125 | MIT | Fast gateway with guardrails and routing. |
 | [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) | 42,683 | MIT | Durable, stateful agent graphs with checkpointing and human-in-the-loop. The production default. |
 | [crewAIInc/crewAI](https://github.com/crewAIInc/crewAI) | 59,326 | MIT | Role-based multi-agent teams. Fast to demo. |
 | [microsoft/autogen](https://github.com/microsoft/autogen) | 61,250 | CC-BY-4.0 | Multi-agent conversations and orchestration research. |
 | [agno-agi/agno](https://github.com/agno-agi/agno) | 42,539 | Apache-2.0 | Full platform for building/running/managing agents. |
 | [pydantic/pydantic-ai](https://github.com/pydantic/pydantic-ai) | 20,393 | MIT | Typed agents with validation-first design. |
-| [huggingface/smolagents](https://github.com/huggingface/smolagents) | 29,666 | Apache-2.0 | Minimal agents that write code as actions. |
-| [openai/openai-agents-python](https://github.com/openai/openai-agents-python) | 29,826 | MIT | Lightweight multi-agent workflows, provider-agnostic. |
+| [huggingface/smolagents](https://github.com/huggingface/smolagents) | 29,667 | Apache-2.0 | Minimal agents that write code as actions. |
+| [openai/openai-agents-python](https://github.com/openai/openai-agents-python) | 29,825 | MIT | Lightweight multi-agent workflows, provider-agnostic. |
 | [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) | 38,487 | MIT | Program,don't prompt. Optimize prompts/pipelines with data. |
 | [temporalio/temporal](https://github.com/temporalio/temporal) | 23,449 | MIT | Durable execution. The right answer for long-running agent workflows. |
 | [modelcontextprotocol/modelcontextprotocol](https://github.com/modelcontextprotocol/modelcontextprotocol) | 9,375 | NOASSERTION | The MCP spec. Tool/context integration standard. |
 | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | 90,986 | NOASSERTION | Reference MCP servers. Read them before writing your own. |
-| [a2aproject/A2A](https://github.com/a2aproject/A2A) | 25,999 | Apache-2.0 | Agent-to-agent protocol for cross-vendor interop. |
+| [a2aproject/A2A](https://github.com/a2aproject/A2A) | 26,000 | Apache-2.0 | Agent-to-agent protocol for cross-vendor interop. |
 | [ag-ui-protocol/ag-ui](https://github.com/ag-ui-protocol/ag-ui) | 16,292 | MIT | Agent↔frontend streaming protocol. |
 | [e2b-dev/E2B](https://github.com/e2b-dev/E2B) | 14,141 | Apache-2.0 | Secure cloud sandboxes for agent-generated code. |
-| [daytonaio/daytona](https://github.com/daytonaio/daytona) | 71,669 | NOASSERTION | Elastic, secure infra for running AI-generated code. |
-| [browser-use/browser-use](https://github.com/browser-use/browser-use) | 117,080 | MIT | Browser automation for agents. |
-| [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 188,313 | AGPL-3.0 | Web → LLM-ready markdown at scale. AGPL, so check your use. |
-| [n8n-io/n8n](https://github.com/n8n-io/n8n) | 206,587 | NOASSERTION | Visual workflow automation with AI nodes. Fair-code, not OSI. |
+| [daytonaio/daytona](https://github.com/daytonaio/daytona) | 71,669 | NOASSERTION | **Archived.** High star count, but unmaintained; use E2B or microsandbox instead. |
+| [superradcompany/microsandbox](https://github.com/superradcompany/microsandbox) | 8,550 | Apache-2.0 | Local-first microVM runtime for running untrusted agent code. |
+| [browser-use/browser-use](https://github.com/browser-use/browser-use) | 117,081 | MIT | Browser automation for agents. |
+| [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 188,316 | AGPL-3.0 | Web → LLM-ready markdown at scale. AGPL, so check your use. |
+| [n8n-io/n8n](https://github.com/n8n-io/n8n) | 206,590 | NOASSERTION | Visual workflow automation with AI nodes. Fair-code, not OSI. |
 | [langgenius/dify](https://github.com/langgenius/dify) | 157,788 | NOASSERTION | Agentic workflows + RAG in one self-hostable workspace. |
-| [langflow-ai/langflow](https://github.com/langflow-ai/langflow) | 155,487 | MIT | Visual builder for agents/flows. |
-| [open-webui/open-webui](https://github.com/open-webui/open-webui) | 153,890 | NOASSERTION | Self-hosted ChatGPT-like UI; connects to Ollama/OpenAI. |
-| [lobehub/lobehub](https://github.com/lobehub/lobehub) | 82,971 | NOASSERTION | Polished multi-agent chat UI/workspace. |
+| [langflow-ai/langflow](https://github.com/langflow-ai/langflow) | 155,488 | MIT | Visual builder for agents/flows. |
+| [open-webui/open-webui](https://github.com/open-webui/open-webui) | 153,891 | NOASSERTION | Self-hosted ChatGPT-like UI; connects to Ollama/OpenAI. |
+| [lobehub/lobehub](https://github.com/lobehub/lobehub) | 82,972 | NOASSERTION | Polished multi-agent chat UI/workspace. |
 
 ---
 
@@ -268,7 +271,7 @@
 | Project | Stars | License | Notes |
 |---|---:|---|---|
 | [langfuse/langfuse](https://github.com/langfuse/langfuse) | 35,350 | NOASSERTION | Open-source LLM tracing, evals, prompts, datasets. The default. |
-| [Arize-ai/phoenix](https://github.com/Arize-ai/phoenix) | 11,696 | NOASSERTION | Tracing + evals, strong for RAG and drift analysis. |
+| [Arize-ai/phoenix](https://github.com/Arize-ai/phoenix) | 11,697 | NOASSERTION | Tracing + evals, strong for RAG and drift analysis. |
 | [comet-ml/opik](https://github.com/comet-ml/opik) | 22,363 | Apache-2.0 | Tracing + evals + guardrails from Comet. |
 | [traceloop/openllmetry](https://github.com/traceloop/openllmetry) | ~7.5k | Apache-2.0 | OpenTelemetry instrumentation for LLM apps. Vendor-neutral tracing. |
 | [mlflow/mlflow](https://github.com/mlflow/mlflow) | 28,250 | Apache-2.0 | Experiment tracking, registry, and now GenAI tracing/eval. The safe default. |
@@ -280,15 +283,15 @@
 | [stanford-crfm/helm](https://github.com/stanford-crfm/helm) | 2,932 | Apache-2.0 | Holistic evaluation across scenarios and metrics. |
 | [UKGovernmentBEIS/inspect_ai](https://github.com/UKGovernmentBEIS/inspect_ai) | 2,930 | MIT | Rigorous eval framework from the UK AI Safety Institute. |
 | [promptfoo/promptfoo](https://github.com/promptfoo/promptfoo) | 25,684 | MIT | Test prompts/agents/RAG in CI; also red-teaming. |
-| [confident-ai/deepeval](https://github.com/confident-ai/deepeval) | 18,606 | Apache-2.0 | LLM unit tests: hallucination, faithfulness, relevancy. |
-| [explodinggradients/ragas](https://github.com/explodinggradients/ragas) | 15,912 | Apache-2.0 | RAG-specific metrics. Pair with a RAG test set. |
+| [confident-ai/deepeval](https://github.com/confident-ai/deepeval) | 18,607 | Apache-2.0 | LLM unit tests: hallucination, faithfulness, relevancy. |
+| [vibrantlabsai/ragas](https://github.com/vibrantlabsai/ragas) | 15,913 | Apache-2.0 | RAG-specific metrics. Pair with a RAG test set. |
 | [Giskard-AI/giskard-oss](https://github.com/Giskard-AI/giskard-oss) | 5,861 | Apache-2.0 | Testing + evaluation for LLM agents. |
 | [evidentlyai/evidently](https://github.com/evidentlyai/evidently) | 7,967 | Apache-2.0 | Data/model/LLM drift and monitoring. |
 | [mlcommons/inference](https://github.com/mlcommons/inference) | 1,636 | Apache-2.0 | MLPerf inference reference implementations. Benchmark methodology standard. |
-| [NVIDIA/garak](https://github.com/NVIDIA/garak) | 9,420 | Apache-2.0 | LLM vulnerability scanner / red-teaming. Run it before someone else does. |
+| [NVIDIA/garak](https://github.com/NVIDIA/garak) | 9,421 | Apache-2.0 | LLM vulnerability scanner / red-teaming. Run it before someone else does. |
 | [NVIDIA-NeMo/Guardrails](https://github.com/NVIDIA-NeMo/Guardrails) | 7,243 | NOASSERTION | Programmable guardrails (rails, flows, dialog control) via Colang. |
-| [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | 7,480 | Apache-2.0 | Validation-style guardrails for structured outputs and safety. |
-| [protectai/llm-guard](https://github.com/protectai/llm-guard) | 3,213 | MIT | Input/output scanners: injection, PII, toxicity, secrets. |
+| [guardrails-ai/guardrails](https://github.com/guardrails-ai/guardrails) | 7,481 | Apache-2.0 | Validation-style guardrails for structured outputs and safety. |
+| [protectai/llm-guard](https://github.com/protectai/llm-guard) | 3,213 | MIT | **Archived.** Input/output scanners for injection, PII, and secrets; pair with Guardrails or NeMo Guardrails. |
 | [meta-llama/PurpleLlama](https://github.com/meta-llama/PurpleLlama) | 4,418 | NOASSERTION | Meta's LLM security/eval toolset (incl. CyberSecEval). |
 | [prometheus/prometheus](https://github.com/prometheus/prometheus) | 66,351 | Apache-2.0 | Metrics. Pair with DCGM exporter for GPU fleet truth. |
 | [grafana/grafana](https://github.com/grafana/grafana) | 77,055 | AGPL-3.0 | Dashboards for GPU/utilization/cost. AGPL. |
@@ -310,7 +313,7 @@ Not part of the runtime stack, but they *teach* it. See [RESOURCES.md](RESOURCES
 | [modular/llm-inference-handbook](https://github.com/modular/llm-inference-handbook) | 449 | Apache-2.0 | Concise inference fundamentals. |
 | [liguodongiot/llm-action](https://github.com/liguodongiot/llm-action) | 25,127 | Apache-2.0 | Large practical LLM-engineering guide (zh/en). |
 | [ai-infra-curriculum/ai-infra-engineer-learning](https://github.com/ai-infra-curriculum/ai-infra-engineer-learning) | 1,750 | MIT | Structured curriculum for AI infra engineers. |
-| [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 105,958 | NOASSERTION | Build a GPT from zero. Pair with Stage 1. |
+| [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 105,961 | NOASSERTION | Build a GPT from zero. Pair with Stage 1. |
 | [mlabonne/llm-course](https://github.com/mlabonne/llm-course) | 83,283 | Apache-2.0 | Roadmap + Colab notebooks for LLM engineering. |
 | [microsoft/generative-ai-for-beginners](https://github.com/microsoft/generative-ai-for-beginners) | 120,979 | MIT | 21 lessons, very gentle on-ramp. |
 | [GokuMohandas/Made-With-ML](https://github.com/GokuMohandas/Made-With-ML) | 49,676 | MIT | Production-grade ML systems, end to end. |

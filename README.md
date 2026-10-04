@@ -27,7 +27,7 @@ It gives you:
 
 1. **A map** of the whole stack, so you know what you don't know.
 2. **A 6-stage roadmap** with concrete exit criteria, so you always know your next step.
-3. **A curated stack** of ~200 open-source projects with live star counts and licenses, so you pick the boring, correct tool.
+3. **A curated stack** of over 200 open-source projects with live star counts and licenses, so you pick the boring, correct tool.
 4. **17 buildable projects** with acceptance criteria, because infra is learned with your hands.
 5. **The math**: the back-of-envelope formulas that separate people who *configure* systems from people who *design* them.
 
@@ -152,11 +152,11 @@ One pick per layer. Boring, maintained, and overwhelmingly the community default
 | File | What's in it | Read it when |
 |---|---|---|
 | [**ROADMAP.md**](ROADMAP.md) | The 6 stages: skills, labs, exit criteria, self-checks | You need to know your next step |
-| [**STACK.md**](STACK.md) | ~200 projects across all 9 layers, with stars + license + when-to-use | You're choosing a tool |
+| [**STACK.md**](STACK.md) | Over 200 projects across all 9 layers, with stars, license, and when to use each | You're choosing a tool |
 | [**HARDWARE.md**](HARDWARE.md) | Accelerators, interconnects, memory math, cluster design, $/token | You're sizing or buying |
 | [**PROJECTS.md**](PROJECTS.md) | 17 buildable projects with acceptance criteria | You learn by building |
 | [**RESOURCES.md**](RESOURCES.md) | Courses, books, papers, blogs, newsletters, benchmarks, communities | You want depth |
-| [**GLOSSARY.md**](GLOSSARY.md) | 140+ terms, defined in one line | A word is thrown at you in a meeting |
+| [**GLOSSARY.md**](GLOSSARY.md) | 200+ terms, defined in one line | A word is thrown at you in a meeting |
 | [**cheatsheets/**](cheatsheets/) | Inference math · training parallelism · cluster ops | You need the formula *now* |
 | [**CONTRIBUTING.md**](CONTRIBUTING.md) | How to add a project or fix a link | You want to improve this |
 
