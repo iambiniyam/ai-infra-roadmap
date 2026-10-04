@@ -21,5 +21,8 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Check internal links and anchors
+        run: python3 scripts/check_internal_links.py
+
       - name: Check GitHub links
         run: python3 scripts/check_links.py --only-github
