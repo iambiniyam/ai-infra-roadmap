@@ -57,33 +57,33 @@ It gives you:
 Every AI system, from a laptop demo to a 100k-GPU cluster, is these nine layers. Learn them bottom-up; debug them top-down.
 
 ```mermaid
-flowchart BT
-    L0["L0 · Hardware & Facility<br/><i>GPU/TPU/NPU · NVLink · InfiniBand · power · cooling</i>"]
-    L1["L1 · Runtime & Compilers<br/><i>CUDA/ROCm · NCCL · Triton · XLA · torch.compile</i>"]
-    L2["L2 · Training & Post-Training<br/><i>PyTorch/JAX · FSDP/ZeRO/TP/PP · LoRA · RLHF/GRPO</i>"]
-    L3["L3 · Inference & Serving<br/><i>vLLM · SGLang · TensorRT-LLM · llama.cpp · quantization</i>"]
-    L4["L4 · Data & Storage<br/><i>S3/MinIO · JuiceFS · Iceberg/Lance · Spark/Ray/Daft · labeling</i>"]
-    L5["L5 · Orchestration & Scheduling<br/><i>K8s · Slurm · Ray · SkyPilot · Argo · Airflow</i>"]
-    L6["L6 · Retrieval & Memory<br/><i>embeddings · vector DBs · rerankers · GraphRAG · memory</i>"]
-    L7["L7 · Application & Agent Runtime<br/><i>gateways · LangGraph · MCP/A2A · sandboxes · workflows</i>"]
-    L8["L8 · Observability, Eval & Safety<br/><i>Langfuse · lm-eval-harness · guardrails · drift · FinOps</i>"]
+flowchart LR
+    L0["**L0**<br/>Hardware<br/><i>GPU · NVLink · IB</i>"]
+    L1["**L1**<br/>Runtime<br/><i>CUDA · NCCL · Triton</i>"]
+    L2["**L2**<br/>Training<br/><i>PyTorch · FSDP · LoRA</i>"]
+    L3["**L3**<br/>Inference<br/><i>vLLM · SGLang · quant</i>"]
+    L4["**L4**<br/>Data<br/><i>S3 · Iceberg · Ray</i>"]
+    L5["**L5**<br/>Orchestration<br/><i>K8s · Slurm · Ray</i>"]
+    L6["**L6**<br/>Retrieval<br/><i>vectors · rerank · RAG</i>"]
+    L7["**L7**<br/>App & Agents<br/><i>gateway · MCP · sandbox</i>"]
+    L8["**L8**<br/>Observability<br/><i>traces · evals · safety</i>"]
 
     L0 --> L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7 --> L8
-
-    X1{{"⚡ Cross-cutting: performance engineering"}}
-    X2{{"💰 Cross-cutting: cost & capacity"}}
-    X3{{"🛡️ Cross-cutting: reliability & security"}}
-
-    L1 -.-> X1
-    L3 -.-> X1
-    L5 -.-> X2
-    L8 -.-> X3
-
-    classDef layer fill:#f6f8fa,stroke:#57606a,stroke-width:1px,color:#24292f;
-    classDef cross fill:#fff8c5,stroke:#9a6700,stroke-width:1px,color:#24292f;
-    class L0,L1,L2,L3,L4,L5,L6,L7,L8 layer;
-    class X1,X2,X3 cross;
 ```
+
+| Layer | Question it answers | Read about it |
+|---|---|---|
+| **L0 Hardware** | How fast can bytes move, and how fast can chips talk? | [HARDWARE.md](HARDWARE.md) |
+| **L1 Runtime & compilers** | What turns my Python into something the chip runs well? | [STACK §L1](STACK.md#l1--runtime-kernels--compilers) |
+| **L2 Training & post-training** | How do I fit and improve a model? | [STACK §L2](STACK.md#l2--training--post-training) |
+| **L3 Inference & serving** | How do I answer requests fast and cheaply? | [STACK §L3](STACK.md#l3--inference--serving) |
+| **L4 Data & storage** | Where do the bytes live, and how do I move them? | [STACK §L4](STACK.md#l4--data--storage) |
+| **L5 Orchestration & scheduling** | Who gets which GPU, and when? | [STACK §L5](STACK.md#l5--orchestration--scheduling) |
+| **L6 Retrieval, context & memory** | How does the model see my data? | [STACK §L6](STACK.md#l6--retrieval-context--memory) |
+| **L7 Application & agent runtime** | How does it become a product? | [STACK §L7](STACK.md#l7--application--agent-runtime) |
+| **L8 Observability, eval & safety** | Is it good, fast, safe, and affordable? | [STACK §L8](STACK.md#l8--observability-evaluation-safety--governance) |
+
+**Cross-cutting, present at every layer:** ⚡ performance engineering · 💰 cost & capacity · 🛡️ reliability & security. These aren't stages you finish; they're habits that start at Stage 2 and never stop.
 
 You do **not** need all nine to get hired or ship value. You need one layer deep and its neighbors shallow. The roadmap tells you which is which.
 
