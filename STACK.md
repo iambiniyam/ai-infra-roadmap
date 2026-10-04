@@ -48,7 +48,7 @@
 | [apache/tvm](https://github.com/apache/tvm) | 13,794 | Apache-2.0 | ML compiler framework: graph + operator optimizations. Older but influential. |
 | [modular/modular](https://github.com/modular/modular) | 29,921 | NOASSERTION | MAX + Mojo. Interesting portability play; watch, don't bet the farm yet. |
 | [onnx/onnx](https://github.com/onnx/onnx) | 21,557 | Apache-2.0 | Interchange format. Needed the moment you leave Python. |
-| [microsoft/onnxruntime](https://github.com/microsoft/onnxruntime) | 22,001 | MIT | Cross-platform inference runtime. Strong for CPU/edge and non-NVIDIA. |
+| [microsoft/onnxruntime](https://github.com/microsoft/onnxruntime) | 22,002 | MIT | Cross-platform inference runtime. Strong for CPU/edge and non-NVIDIA. |
 | [openvinotoolkit/openvino](https://github.com/openvinotoolkit/openvino) | 10,944 | Apache-2.0 | Intel CPU/GPU/NPU optimization and deployment toolkit. |
 | [ml-explore/mlx](https://github.com/ml-explore/mlx) | 28,641 | MIT | Apple-silicon array framework. The right tool for Mac inference/training. |
 | [pytorch/executorch](https://github.com/pytorch/executorch) | 5,077 | NOASSERTION | PyTorch on mobile/embedded/edge. |
@@ -62,7 +62,7 @@
 
 | Project | ★ | License | Notes |
 |---|---:|---|---|
-| [huggingface/transformers](https://github.com/huggingface/transformers) | 166,927 | Apache-2.0 | The model-definition layer everything integrates with. |
+| [huggingface/transformers](https://github.com/huggingface/transformers) | 166,928 | Apache-2.0 | The model-definition layer everything integrates with. |
 | [huggingface/datasets](https://github.com/huggingface/datasets) | 22,028 | Apache-2.0 | Dataset loading/streaming. The default data interface. |
 | [huggingface/tokenizers](https://github.com/huggingface/tokenizers) | 11,152 | Apache-2.0 | Fast tokenization. Understand BPE once, then never think about it. |
 | [huggingface/accelerate](https://github.com/huggingface/accelerate) | 9,901 | Apache-2.0 | Launch training on any device/parallelism with minimal code change. |
@@ -221,7 +221,7 @@
 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | 147,416 | MIT | Broad ecosystem glue. Use targeted pieces; avoid unbounded abstractions. |
 | [infiniflow/ragflow](https://github.com/infiniflow/ragflow) | 91,635 | Apache-2.0 | End-to-end RAG engine with strong parsing (deep document understanding). |
 | [HKUDS/LightRAG](https://github.com/HKUDS/LightRAG) | 39,963 | MIT | Simple, fast GraphRAG. Much cheaper than Microsoft's GraphRAG. |
-| [microsoft/graphrag](https://github.com/microsoft/graphrag) | 36,201 | MIT | Graph-based RAG; powerful, expensive to index. |
+| [microsoft/graphrag](https://github.com/microsoft/graphrag) | 36,202 | MIT | Graph-based RAG; powerful, expensive to index. |
 | [getzep/graphiti](https://github.com/getzep/graphiti) | 31,416 | Apache-2.0 | Real-time temporally-aware knowledge graphs for agents. |
 | [VectifyAI/PageIndex](https://github.com/VectifyAI/PageIndex) | 38,586 | MIT | Reasoning-based retrieval over long docs without a vector store. |
 | [topoteretes/cognee](https://github.com/topoteretes/cognee) | 31,335 | Apache-2.0 | Memory/graph layer with pipelines for RAG over your data. |
@@ -252,9 +252,9 @@
 | [e2b-dev/E2B](https://github.com/e2b-dev/E2B) | 14,141 | Apache-2.0 | Secure cloud sandboxes for agent-generated code. |
 | [daytonaio/daytona](https://github.com/daytonaio/daytona) | 71,669 | NOASSERTION | Elastic, secure infra for running AI-generated code. |
 | [browser-use/browser-use](https://github.com/browser-use/browser-use) | 117,079 | MIT | Browser automation for agents. |
-| [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 188,312 | AGPL-3.0 | Web → LLM-ready markdown at scale. AGPL — check your use. |
+| [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 188,313 | AGPL-3.0 | Web → LLM-ready markdown at scale. AGPL — check your use. |
 | [n8n-io/n8n](https://github.com/n8n-io/n8n) | 206,587 | NOASSERTION | Visual workflow automation with AI nodes. Fair-code, not OSI. |
-| [langgenius/dify](https://github.com/langgenius/dify) | 157,786 | NOASSERTION | Agentic workflows + RAG in one self-hostable workspace. |
+| [langgenius/dify](https://github.com/langgenius/dify) | 157,787 | NOASSERTION | Agentic workflows + RAG in one self-hostable workspace. |
 | [langflow-ai/langflow](https://github.com/langflow-ai/langflow) | 155,487 | MIT | Visual builder for agents/flows. |
 | [open-webui/open-webui](https://github.com/open-webui/open-webui) | 153,890 | NOASSERTION | Self-hosted ChatGPT-like UI; connects to Ollama/OpenAI. |
 | [lobehub/lobehub](https://github.com/lobehub/lobehub) | 82,971 | NOASSERTION | Polished multi-agent chat UI/workspace. |
