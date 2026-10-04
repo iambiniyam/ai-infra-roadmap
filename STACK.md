@@ -76,7 +76,7 @@
 | [jax-ml/jax](https://github.com/jax-ml/jax) | 36,369 | Apache-2.0 | Composable transforms, `shard_map`, SPMD. The TPU/Google path. |
 | [google/flax](https://github.com/google/flax) | 7,333 | Apache-2.0 | Neural-net library for JAX. |
 | [keras-team/keras](https://github.com/keras-team/keras) | 64,347 | Apache-2.0 | Multi-backend (JAX/TF/PyTorch). Good for pedagogy and small scale. |
-| [unslothai/unsloth](https://github.com/unslothai/unsloth) | 77,181 | Apache-2.0 | Fastest path to a working LoRA/QLoRA fine-tune; big memory savings. |
+| [unslothai/unsloth](https://github.com/unslothai/unsloth) | 77,182 | Apache-2.0 | Fastest path to a working LoRA/QLoRA fine-tune; big memory savings. |
 | [hiyouga/LlamaFactory](https://github.com/hiyouga/LlamaFactory) | 75,298 | Apache-2.0 | Unified fine-tuning for 100+ LLMs/VLMs, config-driven. Great for teams. |
 | [axolotl-ai-cloud/axolotl](https://github.com/axolotl-ai-cloud/axolotl) | 12,513 | Apache-2.0 | YAML-configured fine-tuning; popular for reproducible SFT/DPO recipes. |
 | [meta-pytorch/torchtune](https://github.com/meta-pytorch/torchtune) | 5,811 | BSD-3-Clause | PyTorch-native post-training library. Clean, hackable. |
