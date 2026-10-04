@@ -282,7 +282,7 @@ Over 200 open-source projects, organized by the [9 layers](README.md#the-map). S
 | [open-compass/opencompass](https://github.com/open-compass/opencompass) | 7,490 | Apache-2.0 | Large-scale LLM evaluation platform, wide model coverage. |
 | [stanford-crfm/helm](https://github.com/stanford-crfm/helm) | 2,932 | Apache-2.0 | Holistic evaluation across scenarios and metrics. |
 | [UKGovernmentBEIS/inspect_ai](https://github.com/UKGovernmentBEIS/inspect_ai) | 2,930 | MIT | Rigorous eval framework from the UK AI Safety Institute. |
-| [promptfoo/promptfoo](https://github.com/promptfoo/promptfoo) | 25,684 | MIT | Test prompts/agents/RAG in CI; also red-teaming. |
+| [promptfoo/promptfoo](https://github.com/promptfoo/promptfoo) | 25,685 | MIT | Test prompts/agents/RAG in CI; also red-teaming. |
 | [confident-ai/deepeval](https://github.com/confident-ai/deepeval) | 18,607 | Apache-2.0 | LLM unit tests: hallucination, faithfulness, relevancy. |
 | [vibrantlabsai/ragas](https://github.com/vibrantlabsai/ragas) | 15,913 | Apache-2.0 | RAG-specific metrics. Pair with a RAG test set. |
 | [Giskard-AI/giskard-oss](https://github.com/Giskard-AI/giskard-oss) | 5,861 | Apache-2.0 | Testing + evaluation for LLM agents. |
