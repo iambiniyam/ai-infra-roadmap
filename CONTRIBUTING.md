@@ -4,7 +4,7 @@ Thanks for helping make this the best free AI-infra roadmap. The bar is **clarit
 
 ## What we want
 
-1. **A genuinely better path.** If you can reorder a stage, add an exit criterion, or replace a fuzzy instruction with a measurable one — that's the highest-value contribution.
+1. **A genuinely better path.** If you can reorder a stage, add an exit criterion, or replace a fuzzy instruction with a measurable one, that's the highest-value contribution.
 2. **Missing free resources.** Courses, textbooks, papers, lectures. Must be free to access (or clearly marked *paid*).
 3. **Corrections.** A wrong formula, a stale claim, a link that rots, a license mislabeled. These matter a lot.
 4. **Projects with acceptance criteria.** "Build X" is not a project. "Build X and be able to show Y, measured by Z" is.
@@ -69,7 +69,7 @@ GITHUB_TOKEN=$(gh auth token) python3 scripts/refresh_stars.py
 Then:
 
 - Keep the diff focused. One logical change per PR.
-- Don't renumber existing projects or reorder stages in a drive-by PR — open an issue first.
+- Don't renumber existing projects or reorder stages in a drive-by PR; open an issue first.
 - Match the existing voice: direct, concrete, and allergic to hype.
 
 ## Style guide

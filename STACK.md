@@ -1,10 +1,10 @@
-# 🧱 The Stack
+# The Stack
 
 ~200 open-source projects, organized by the [9 layers](README.md#the-map). Star counts and licenses were pulled from the GitHub API on **2026-10-04** and are refreshed weekly by [`scripts/refresh_stars.py`](scripts/refresh_stars.py).
 
-**How to read this:** each layer starts with a short "decision notes" block — the mental model for choosing — followed by the table. `★` is a rough popularity/health signal, **not** a quality score. A 2k-star project that solves your exact problem beats a 90k-star project that doesn't.
+**How to read this:** each layer starts with a short "decision notes" block, the mental model for choosing, followed by the table. `Stars` column is a rough popularity signal, **not** a quality score. A 2k-star project that solves your exact problem beats a 90k-star project that doesn't.
 
-> ⚠️ **License note:** anything marked `NOASSERTION` or `AGPL-3.0`/`GPL-3.0` needs a legal look before you embed it in a product. `SSPL`/`BSL`/dual-license projects (MinIO, Redis, Terraform, and some others) are *source-available*, not OSI-open-source — fine to use, but know the difference. This is not legal advice.
+> **License note:** anything marked `NOASSERTION` or `AGPL-3.0`/`GPL-3.0` needs a legal look before you embed it in a product. `SSPL`/`BSL`/dual-license projects (MinIO, Redis, Terraform, and some others) are *source-available*, not OSI-open-source. They are fine to use, but know the difference. This is not legal advice.
 
 ---
 
@@ -12,7 +12,7 @@
 
 **Decision notes.** You rarely choose hardware in code, but it dictates everything above it. Two questions decide most designs: *how fast can I move bytes into the chip* (HBM bandwidth) and *how fast can chips talk to each other* (NVLink intra-node, InfiniBand inter-node). Everything else is second-order. See [HARDWARE.md](HARDWARE.md) for the math.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [NVIDIA/gpu-operator](https://github.com/NVIDIA/gpu-operator) | 2,891 | Apache-2.0 | Turns a K8s node into a GPU node: drivers, container toolkit, DCGM, device plugin, MIG. Start here on K8s. |
 | [NVIDIA/k8s-device-plugin](https://github.com/NVIDIA/k8s-device-plugin) | 3,887 | Apache-2.0 | Exposes GPUs to the kubelet. Understand it when pods can't see GPUs. |
@@ -30,7 +30,7 @@
 
 **Decision notes.** PyTorch is the substrate. `torch.compile` + Triton get you 80% of achievable performance with 5% of the effort; hand-written CUDA is for the last 20% and for libraries (attention, GEMM, communication). Learn the *roofline* first, or you'll optimize the wrong kernel.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [pytorch/pytorch](https://github.com/pytorch/pytorch) | 103,700 | NOASSERTION | The default framework. Learn `torch.compile`, AMP, the caching allocator, and `torch.profiler`. |
 | [triton-lang/triton](https://github.com/triton-lang/triton) | 20,292 | MIT | Python-like DSL for GPU kernels. The single highest-ROI kernel skill today. |
@@ -42,11 +42,11 @@
 | [NVIDIA/TransformerEngine](https://github.com/NVIDIA/TransformerEngine) | 3,565 | Apache-2.0 | FP8/FP4 training and inference for transformers. Where the numerics live. |
 | [NVIDIA/nccl](https://github.com/NVIDIA/nccl) | 5,133 | NOASSERTION | Multi-GPU collectives. Read `nccl-tests` output; memorize the algorithms. |
 | [NVIDIA/nccl-tests](https://github.com/NVIDIA/nccl-tests) | ~1.7k | BSD-3-Clause | Benchmark the fabric. Do this before blaming the model. |
-| [openucx/ucx](https://github.com/openucx/ucx) | 1,718 | NOASSERTION | Unified Communication X — the transport under MPI/NCCL/NIXL. |
+| [openucx/ucx](https://github.com/openucx/ucx) | 1,718 | NOASSERTION | Unified Communication X, the transport under MPI/NCCL/NIXL. |
 | [ai-dynamo/nixl](https://github.com/ai-dynamo/nixl) | 1,286 | NOASSERTION | Inference Xfer Library: high-speed KV-cache movement. Core of disaggregated serving. |
 | [openxla/xla](https://github.com/openxla/xla) | 4,573 | Apache-2.0 | The compiler behind JAX/TPU. Learn it when you hit TPU or `jax.jit` limits. |
 | [apache/tvm](https://github.com/apache/tvm) | 13,794 | Apache-2.0 | ML compiler framework: graph + operator optimizations. Older but influential. |
-| [modular/modular](https://github.com/modular/modular) | 29,921 | NOASSERTION | MAX + Mojo. Interesting portability play; watch, don't bet the farm yet. |
+| [modular/modular](https://github.com/modular/modular) | 29,922 | NOASSERTION | MAX + Mojo. Interesting portability play; watch, don't bet the farm yet. |
 | [onnx/onnx](https://github.com/onnx/onnx) | 21,557 | Apache-2.0 | Interchange format. Needed the moment you leave Python. |
 | [microsoft/onnxruntime](https://github.com/microsoft/onnxruntime) | 22,002 | MIT | Cross-platform inference runtime. Strong for CPU/edge and non-NVIDIA. |
 | [openvinotoolkit/openvino](https://github.com/openvinotoolkit/openvino) | 10,944 | Apache-2.0 | Intel CPU/GPU/NPU optimization and deployment toolkit. |
@@ -60,13 +60,13 @@
 
 **Decision notes.** Three separate problems hide here: **(1)** pretraining at scale (Megatron/DeepSpeed/Composer + a parallelism plan), **(2)** parameter-efficient fine-tuning (PEFT/LoRA, Unsloth, LlamaFactory, Axolotl, torchtune), and **(3)** preference/RL post-training (TRL, verl, OpenRLHF). Choose by *scale and method*, not by GitHub stars. For a first fine-tune, use a high-level trainer; drop to the framework only when you need control.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [huggingface/transformers](https://github.com/huggingface/transformers) | 166,928 | Apache-2.0 | The model-definition layer everything integrates with. |
 | [huggingface/datasets](https://github.com/huggingface/datasets) | 22,028 | Apache-2.0 | Dataset loading/streaming. The default data interface. |
 | [huggingface/tokenizers](https://github.com/huggingface/tokenizers) | 11,152 | Apache-2.0 | Fast tokenization. Understand BPE once, then never think about it. |
 | [huggingface/accelerate](https://github.com/huggingface/accelerate) | 9,901 | Apache-2.0 | Launch training on any device/parallelism with minimal code change. |
-| [huggingface/peft](https://github.com/huggingface/peft) | 21,751 | Apache-2.0 | LoRA/QLoRA/DoRA and friends — the reference implementation. |
+| [huggingface/peft](https://github.com/huggingface/peft) | 21,751 | Apache-2.0 | LoRA/QLoRA/DoRA and friends: the reference implementation. |
 | [huggingface/trl](https://github.com/huggingface/trl) | 19,445 | Apache-2.0 | SFT/DPO/GRPO/PPO trainers. Start here for post-training. |
 | [deepspeedai/DeepSpeed](https://github.com/deepspeedai/DeepSpeed) | 43,173 | Apache-2.0 | ZeRO stages, offload, inference kernels. The accessible path to multi-GPU training. |
 | [NVIDIA/Megatron-LM](https://github.com/NVIDIA/Megatron-LM) | 18,063 | NOASSERTION | Peak-MFU large-scale training; TP/PP/EP reference. Steep, worth it. |
@@ -82,7 +82,7 @@
 | [meta-pytorch/torchtune](https://github.com/meta-pytorch/torchtune) | 5,811 | BSD-3-Clause | PyTorch-native post-training library. Clean, hackable. |
 | [modelscope/ms-swift](https://github.com/modelscope/ms-swift) | 15,777 | Apache-2.0 | CPT/SFT/DPO/GRPO for 600+ LLMs and 300+ MLLMs. Broad model coverage. |
 | [InternLM/xtuner](https://github.com/InternLM/xtuner) | 5,205 | Apache-2.0 | Training engine tuned for ultra-large MoE models. |
-| [verl-project/verl](https://github.com/verl-project/verl) | 23,740 | Apache-2.0 | Flexible RL post-training (PPO/DAPO/GRPO) — the framework behind many open reasoning models. |
+| [verl-project/verl](https://github.com/verl-project/verl) | 23,740 | Apache-2.0 | Flexible RL post-training (PPO/DAPO/GRPO): the framework behind many open reasoning models. |
 | [OpenRLHF/OpenRLHF](https://github.com/OpenRLHF/OpenRLHF) | 10,065 | Apache-2.0 | Ray-based agentic RL framework, easy to scale. |
 | [linkedin/Liger-Kernel](https://github.com/linkedin/Liger-Kernel) | 6,644 | BSD-2-Clause | Triton kernels that cut training memory and raise throughput. Free wins. |
 | [karpathy/nanoGPT](https://github.com/karpathy/nanoGPT) | 63,523 | MIT | Minimal GPT training. The best "learn by reading" codebase. |
@@ -95,12 +95,12 @@
 
 **Decision notes.** Pick by *deployment target*, not popularity: **server GPU** → vLLM (default) or SGLang (prefix-heavy/structured); **max NVIDIA perf** → TensorRT-LLM; **CPU/edge/Mac** → llama.cpp; **one-command local** → Ollama; **Kubernetes fleet** → KServe + llm-d/Dynamo. Then optimize the *cost at your SLO*: quantization, prefix caching, and disaggregation usually beat micro-tuning.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [vllm-project/vllm](https://github.com/vllm-project/vllm) | 93,132 | Apache-2.0 | The default LLM server. PagedAttention, continuous batching, wide model/hardware support. |
 | [sgl-project/sglang](https://github.com/sgl-project/sglang) | 36,757 | Apache-2.0 | RadixAttention prefix caching + structured output. Often wins on shared-prefix workloads. |
 | [NVIDIA/TensorRT-LLM](https://github.com/NVIDIA/TensorRT-LLM) | 14,762 | NOASSERTION | Highest NVIDIA throughput after engineering effort. Build step is real. |
-| [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | 130,235 | MIT | Runs everywhere; GGUF quantization; the "does it fit" baseline. |
+| [ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp) | 130,236 | MIT | Runs everywhere; GGUF quantization; the "does it fit" baseline. |
 | [ollama/ollama](https://github.com/ollama/ollama) | 182,129 | MIT | One-command local models. Great for dev, not for serving at scale. |
 | [huggingface/text-generation-inference](https://github.com/huggingface/text-generation-inference) | 10,882 | Apache-2.0 | HF's serving stack. Check activity before adopting in 2026. |
 | [InternLM/lmdeploy](https://github.com/InternLM/lmdeploy) | 8,106 | Apache-2.0 | Efficient serving with strong Chinese-model and edge coverage. |
@@ -123,18 +123,18 @@
 | [vllm-project/aibrix](https://github.com/vllm-project/aibrix) | 5,121 | Apache-2.0 | Pluggable inference infra components (autoscaler, cache, router). |
 | [kserve/kserve](https://github.com/kserve/kserve) | 6,070 | Apache-2.0 | Standardized multi-framework serving on Kubernetes, incl. LLM inference. |
 | [gpustack/gpustack](https://github.com/gpustack/gpustack) | 5,781 | Apache-2.0 | GPU cluster manager for serving vLLM/SGLang + on-demand GPU dev boxes. |
-| [vllm-project/semantic-router](https://github.com/vllm-project/semantic-router) | 6,019 | Apache-2.0 | Route requests to models by intent/complexity — cheap models for easy queries. |
+| [vllm-project/semantic-router](https://github.com/vllm-project/semantic-router) | 6,019 | Apache-2.0 | Route requests to models by intent or complexity; send easy queries to cheap models. |
 | [vllm-project/vllm-ascend](https://github.com/vllm-project/vllm-ascend) | 2,918 | Apache-2.0 | vLLM on Huawei Ascend NPUs. |
 
 ---
 
 ## L4 · Data & Storage
 
-**Decision notes.** Training and RAG both die on data I/O, not on GPUs. Three rules: **(1)** never store millions of tiny files for training — use sharded formats (WebDataset, Mosaic Streaming, Lance); **(2)** separate object storage (cheap, durable) from a caching/parallel FS (fast) — Fluid/JuiceFS/Alluxio exist for this; **(3)** version your data as seriously as your code (DVC/lakeFS) and track it (lineage).
+**Decision notes.** Training and RAG both die on data I/O, not on GPUs. Three rules: **(1)** never store millions of tiny files for training; use sharded formats (WebDataset, Mosaic Streaming, Lance); **(2)** separate object storage (cheap, durable) from a caching/parallel FS (fast); Fluid/JuiceFS/Alluxio exist for this; **(3)** version your data as seriously as your code (DVC/lakeFS) and track it (lineage).
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
-| [minio/minio](https://github.com/minio/minio) | 61,342 | AGPL-3.0 | S3-compatible object store for on-prem. AGPL — check your use case. |
+| [minio/minio](https://github.com/minio/minio) | 61,342 | AGPL-3.0 | S3-compatible object store for on-prem. AGPL, so check your use case. |
 | [ceph/ceph](https://github.com/ceph/ceph) | 17,091 | NOASSERTION | Distributed object/block/file storage. Heavy but battle-tested. |
 | [juicedata/juicefs](https://github.com/juicedata/juicefs) | 14,494 | Apache-2.0 | POSIX FS on top of object storage + Redis. Great for shared training data. |
 | [Alluxio/alluxio](https://github.com/Alluxio/alluxio) | 7,247 | Apache-2.0 | Data orchestration/caching between storage and compute. |
@@ -156,7 +156,7 @@
 | [argilla-io/argilla](https://github.com/argilla-io/argilla) | 5,137 | Apache-2.0 | Human-in-the-loop data curation for LLMs. |
 | [Unstructured-IO/unstructured](https://github.com/Unstructured-IO/unstructured) | 15,527 | Apache-2.0 | Document ETL into structured data. |
 | [docling-project/docling](https://github.com/docling-project/docling) | 68,342 | MIT | Best-in-class document → structured markdown for RAG. |
-| [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) | 90,560 | Apache-2.0 | OCR for PDFs/images in 100+ languages. |
+| [PaddlePaddle/PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) | 90,561 | Apache-2.0 | OCR for PDFs/images in 100+ languages. |
 | [opendataloader-project/opendataloader-pdf](https://github.com/opendataloader-project/opendataloader-pdf) | 29,458 | Apache-2.0 | PDF → AI-ready data with layout awareness. |
 
 **Also worth knowing:** [MosaicML Streaming](https://github.com/mosaicml/streaming) and [WebDataset](https://github.com/webdataset/webdataset) (sharded training formats), [Daft](https://github.com/Eventual-Inc/Daft) and [Ray Data](https://github.com/ray-project/ray) (distributed multimodal preprocessing), [LitData](https://github.com/Lightning-AI/litdata), [Petastorm](https://github.com/uber/petastorm).
@@ -167,7 +167,7 @@
 
 **Decision notes.** Three families: **K8s** (fleet, multi-tenant serving, platform), **Slurm** (HPC-style training clusters, what labs actually run), **Ray** (Python-native distributed compute for both). Add **SkyPilot** to place work across clouds/regions and **Airflow/Prefect/Dagster** for orchestration of *pipelines* (not GPUs). Don't run both Slurm and K8s unless you have a reason you can articulate.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [kubernetes/kubernetes](https://github.com/kubernetes/kubernetes) | 128,216 | Apache-2.0 | The substrate for GPU platforms. Learn Jobs, quotas, and scheduling semantics. |
 | [ray-project/ray](https://github.com/ray-project/ray) | 43,967 | Apache-2.0 | Distributed Python runtime + Train/Tune/Serve/Data. Excellent for pipelines that mix CPU and GPU. |
@@ -200,9 +200,9 @@
 
 **Decision notes.** Order of impact: **chunking/parsing quality > hybrid search > reranking > embedding model > ANN index choice.** Most "vector DB" problems are actually document-processing problems. Start with `pgvector` if you already run Postgres; go dedicated (Qdrant/Milvus/Weaviate) past ~10M vectors or when you need filtering at scale. Add GraphRAG only when relationships genuinely matter.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
-| [facebookresearch/faiss](https://github.com/facebookresearch/faiss) | 41,035 | MIT | The ANN library. Not a database — a building block. |
+| [facebookresearch/faiss](https://github.com/facebookresearch/faiss) | 41,035 | MIT | The ANN library. Not a database; a building block. |
 | [milvus-io/milvus](https://github.com/milvus-io/milvus) | 46,314 | Apache-2.0 | Cloud-native vector DB built for very large scale. |
 | [qdrant/qdrant](https://github.com/qdrant/qdrant) | 34,921 | Apache-2.0 | Excellent DX, filtering, quantization. Great default dedicated choice. |
 | [weaviate/weaviate](https://github.com/weaviate/weaviate) | 16,862 | NOASSERTION | Vectors + objects + hybrid search, built-in modules. |
@@ -215,16 +215,16 @@
 | [typesense/typesense](https://github.com/typesense/typesense) | 26,631 | GPL-3.0 | Low-ops search alternative to Algolia. |
 | [vespa-engine/vespa](https://github.com/vespa-engine/vespa) | 7,118 | Apache-2.0 | Industrial-strength ranking + vectors. Steeper, very powerful. |
 | [huggingface/sentence-transformers](https://github.com/huggingface/sentence-transformers) | 19,145 | Apache-2.0 | Embeddings + reranking. The default embedding toolkit. |
-| [FlagOpen/FlagEmbedding](https://github.com/FlagOpen/FlagEmbedding) | 12,210 | MIT | BGE embeddings and rerankers — strong quality/cost. |
+| [FlagOpen/FlagEmbedding](https://github.com/FlagOpen/FlagEmbedding) | 12,210 | MIT | BGE embeddings and rerankers; strong quality for the cost. |
 | [neuml/txtai](https://github.com/neuml/txtai) | 12,991 | Apache-2.0 | All-in-one embeddings database + pipelines. |
-| [run-llama/llama_index](https://github.com/run-llama/llama_index) | 52,398 | MIT | Data framework for RAG/agents; the largest set of connectors and index types. |
+| [run-llama/llama_index](https://github.com/run-llama/llama_index) | 52,399 | MIT | Data framework for RAG/agents; the largest set of connectors and index types. |
 | [langchain-ai/langchain](https://github.com/langchain-ai/langchain) | 147,416 | MIT | Broad ecosystem glue. Use targeted pieces; avoid unbounded abstractions. |
-| [infiniflow/ragflow](https://github.com/infiniflow/ragflow) | 91,635 | Apache-2.0 | End-to-end RAG engine with strong parsing (deep document understanding). |
+| [infiniflow/ragflow](https://github.com/infiniflow/ragflow) | 91,636 | Apache-2.0 | End-to-end RAG engine with strong parsing (deep document understanding). |
 | [HKUDS/LightRAG](https://github.com/HKUDS/LightRAG) | 39,963 | MIT | Simple, fast GraphRAG. Much cheaper than Microsoft's GraphRAG. |
 | [microsoft/graphrag](https://github.com/microsoft/graphrag) | 36,202 | MIT | Graph-based RAG; powerful, expensive to index. |
-| [getzep/graphiti](https://github.com/getzep/graphiti) | 31,416 | Apache-2.0 | Real-time temporally-aware knowledge graphs for agents. |
+| [getzep/graphiti](https://github.com/getzep/graphiti) | 31,417 | Apache-2.0 | Real-time temporally-aware knowledge graphs for agents. |
 | [VectifyAI/PageIndex](https://github.com/VectifyAI/PageIndex) | 38,586 | MIT | Reasoning-based retrieval over long docs without a vector store. |
-| [topoteretes/cognee](https://github.com/topoteretes/cognee) | 31,335 | Apache-2.0 | Memory/graph layer with pipelines for RAG over your data. |
+| [topoteretes/cognee](https://github.com/topoteretes/cognee) | 31,336 | Apache-2.0 | Memory/graph layer with pipelines for RAG over your data. |
 
 ---
 
@@ -232,18 +232,18 @@
 
 **Decision notes.** You need four things to run agents in production: **a gateway** (keys, routing, budgets, fallbacks), **a durable execution model** (retries, long-running state), **sandboxing** (untrusted generated code), and **observability** (L8). Frameworks come after those. Choose a framework by how well it lets you *debug*, not by how it demos.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [BerriAI/litellm](https://github.com/BerriAI/litellm) | 60,094 | NOASSERTION | The default AI gateway: 100+ providers, OpenAI-compatible, budgets, fallbacks, cost tracking. |
 | [Portkey-AI/gateway](https://github.com/Portkey-AI/gateway) | 13,125 | MIT | Fast gateway with guardrails and routing. |
-| [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) | 42,681 | MIT | Durable, stateful agent graphs with checkpointing and human-in-the-loop. The production default. |
+| [langchain-ai/langgraph](https://github.com/langchain-ai/langgraph) | 42,683 | MIT | Durable, stateful agent graphs with checkpointing and human-in-the-loop. The production default. |
 | [crewAIInc/crewAI](https://github.com/crewAIInc/crewAI) | 59,326 | MIT | Role-based multi-agent teams. Fast to demo. |
 | [microsoft/autogen](https://github.com/microsoft/autogen) | 61,250 | CC-BY-4.0 | Multi-agent conversations and orchestration research. |
 | [agno-agi/agno](https://github.com/agno-agi/agno) | 42,539 | Apache-2.0 | Full platform for building/running/managing agents. |
 | [pydantic/pydantic-ai](https://github.com/pydantic/pydantic-ai) | 20,393 | MIT | Typed agents with validation-first design. |
 | [huggingface/smolagents](https://github.com/huggingface/smolagents) | 29,666 | Apache-2.0 | Minimal agents that write code as actions. |
 | [openai/openai-agents-python](https://github.com/openai/openai-agents-python) | 29,826 | MIT | Lightweight multi-agent workflows, provider-agnostic. |
-| [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) | 38,487 | MIT | Program—don't prompt. Optimize prompts/pipelines with data. |
+| [stanfordnlp/dspy](https://github.com/stanfordnlp/dspy) | 38,487 | MIT | Program,don't prompt. Optimize prompts/pipelines with data. |
 | [temporalio/temporal](https://github.com/temporalio/temporal) | 23,449 | MIT | Durable execution. The right answer for long-running agent workflows. |
 | [modelcontextprotocol/modelcontextprotocol](https://github.com/modelcontextprotocol/modelcontextprotocol) | 9,375 | NOASSERTION | The MCP spec. Tool/context integration standard. |
 | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers) | 90,986 | NOASSERTION | Reference MCP servers. Read them before writing your own. |
@@ -251,10 +251,10 @@
 | [ag-ui-protocol/ag-ui](https://github.com/ag-ui-protocol/ag-ui) | 16,292 | MIT | Agent↔frontend streaming protocol. |
 | [e2b-dev/E2B](https://github.com/e2b-dev/E2B) | 14,141 | Apache-2.0 | Secure cloud sandboxes for agent-generated code. |
 | [daytonaio/daytona](https://github.com/daytonaio/daytona) | 71,669 | NOASSERTION | Elastic, secure infra for running AI-generated code. |
-| [browser-use/browser-use](https://github.com/browser-use/browser-use) | 117,079 | MIT | Browser automation for agents. |
-| [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 188,313 | AGPL-3.0 | Web → LLM-ready markdown at scale. AGPL — check your use. |
+| [browser-use/browser-use](https://github.com/browser-use/browser-use) | 117,080 | MIT | Browser automation for agents. |
+| [firecrawl/firecrawl](https://github.com/firecrawl/firecrawl) | 188,313 | AGPL-3.0 | Web → LLM-ready markdown at scale. AGPL, so check your use. |
 | [n8n-io/n8n](https://github.com/n8n-io/n8n) | 206,587 | NOASSERTION | Visual workflow automation with AI nodes. Fair-code, not OSI. |
-| [langgenius/dify](https://github.com/langgenius/dify) | 157,787 | NOASSERTION | Agentic workflows + RAG in one self-hostable workspace. |
+| [langgenius/dify](https://github.com/langgenius/dify) | 157,788 | NOASSERTION | Agentic workflows + RAG in one self-hostable workspace. |
 | [langflow-ai/langflow](https://github.com/langflow-ai/langflow) | 155,487 | MIT | Visual builder for agents/flows. |
 | [open-webui/open-webui](https://github.com/open-webui/open-webui) | 153,890 | NOASSERTION | Self-hosted ChatGPT-like UI; connects to Ollama/OpenAI. |
 | [lobehub/lobehub](https://github.com/lobehub/lobehub) | 82,971 | NOASSERTION | Polished multi-agent chat UI/workspace. |
@@ -263,9 +263,9 @@
 
 ## L8 · Observability, Evaluation, Safety & Governance
 
-**Decision notes.** Three different jobs, often confused: **tracing** (what happened?), **evaluation** (is it good?), and **guardrails/red-teaming** (is it safe?). You need all three, and you need them *in CI* — an eval that only runs in a notebook is a hobby. Start with OpenTelemetry-compatible tracing so you're never locked in.
+**Decision notes.** Three different jobs, often confused: **tracing** (what happened?), **evaluation** (is it good?), and **guardrails/red-teaming** (is it safe?). You need all three, and you need them *in CI*. An eval that only runs in a notebook is a hobby. Start with OpenTelemetry-compatible tracing so you're never locked in.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [langfuse/langfuse](https://github.com/langfuse/langfuse) | 35,350 | NOASSERTION | Open-source LLM tracing, evals, prompts, datasets. The default. |
 | [Arize-ai/phoenix](https://github.com/Arize-ai/phoenix) | 11,696 | NOASSERTION | Tracing + evals, strong for RAG and drift analysis. |
@@ -300,7 +300,7 @@
 
 Not part of the runtime stack, but they *teach* it. See [RESOURCES.md](RESOURCES.md) for courses, papers, and communities.
 
-| Project | ★ | License | Notes |
+| Project | Stars | License | Notes |
 |---|---:|---|---|
 | [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19,094 | CC-BY-SA-4.0 | The best free book on the engineering/debugging side of ML. |
 | [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 5,838 | Apache-2.0 | Quantitative derivation of inference/training system design (zh, with tooling). |
@@ -310,13 +310,13 @@ Not part of the runtime stack, but they *teach* it. See [RESOURCES.md](RESOURCES
 | [modular/llm-inference-handbook](https://github.com/modular/llm-inference-handbook) | 449 | Apache-2.0 | Concise inference fundamentals. |
 | [liguodongiot/llm-action](https://github.com/liguodongiot/llm-action) | 25,127 | Apache-2.0 | Large practical LLM-engineering guide (zh/en). |
 | [ai-infra-curriculum/ai-infra-engineer-learning](https://github.com/ai-infra-curriculum/ai-infra-engineer-learning) | 1,750 | MIT | Structured curriculum for AI infra engineers. |
-| [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 105,957 | NOASSERTION | Build a GPT from zero. Pair with Stage 1. |
+| [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 105,958 | NOASSERTION | Build a GPT from zero. Pair with Stage 1. |
 | [mlabonne/llm-course](https://github.com/mlabonne/llm-course) | 83,283 | Apache-2.0 | Roadmap + Colab notebooks for LLM engineering. |
 | [microsoft/generative-ai-for-beginners](https://github.com/microsoft/generative-ai-for-beginners) | 120,979 | MIT | 21 lessons, very gentle on-ramp. |
 | [GokuMohandas/Made-With-ML](https://github.com/GokuMohandas/Made-With-ML) | 49,676 | MIT | Production-grade ML systems, end to end. |
 | [DataTalksClub/mlops-zoomcamp](https://github.com/DataTalksClub/mlops-zoomcamp) | 15,374 | NOASSERTION | Free 9-week MLOps course. |
 | [DataTalksClub/data-engineering-zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp) | 45,985 | NOASSERTION | Free data-engineering course. |
-| [d2l-ai/d2l-en](https://github.com/d2l-ai/d2l-en) | 29,757 | NOASSERTION | Dive into Deep Learning — free interactive textbook. |
+| [d2l-ai/d2l-en](https://github.com/d2l-ai/d2l-en) | 29,757 | NOASSERTION | Dive into Deep Learning, free interactive textbook. |
 | [dair-ai/ML-YouTube-Courses](https://github.com/dair-ai/ML-YouTube-Courses) | 17,432 | CC0-1.0 | Index of free ML course videos. |
 | [NirDiamant/agents-towards-production](https://github.com/NirDiamant/agents-towards-production) | 21,526 | NOASSERTION | Production agent patterns, code-first. |
 

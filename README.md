@@ -1,17 +1,15 @@
 <div align="center">
 
-# 🧠 AI Infra Roadmap
+# AI Infra Roadmap
 
 **A free, open-source, opinionated path from "I can write Python" to "I run frontier-scale AI infrastructure."**
 
-Real tools · Real math · Real projects · Every resource free
+Real tools, the math behind them, and projects you can build. All of it free.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-[![Made for Engineers](https://img.shields.io/badge/made%20for-infra%20engineers-blueviolet.svg)](#who-is-this-for)
-[![Stars checked](https://img.shields.io/badge/stars-refreshed%20weekly-informational.svg)](.github/workflows/refresh-stars.yml)
 
-[The Map](#the-map) · [Pick Your Entry Point](#pick-your-entry-point) · [6 Stages](#the-roadmap-in-6-stages) · [The Stack](STACK.md) · [Projects](PROJECTS.md) · [Resources](RESOURCES.md)
+[The map](#the-map) · [Entry points](#pick-your-entry-point) · [The 6 stages](#the-roadmap-in-6-stages) · [Stack](STACK.md) · [Projects](PROJECTS.md) · [Resources](RESOURCES.md)
 
 </div>
 
@@ -19,9 +17,9 @@ Real tools · Real math · Real projects · Every resource free
 
 ## What this is
 
-AI infrastructure is the discipline of making models **train faster, serve cheaper, and stay up** — GPUs, kernels, distributed training, inference engines, data pipelines, orchestration, retrieval, observability, and the cost math that ties them together.
+AI infrastructure is the discipline of making models **train faster, serve cheaper, and stay up**: GPUs, kernels, distributed training, inference engines, data pipelines, orchestration, retrieval, observability, and the cost math that ties them together.
 
-It is one of the highest-leverage skills in software right now, and almost all of the knowledge is already floating around for free — scattered across arXiv papers, Discord servers, blog posts, half-abandoned awesome-lists, and 200k-star repos with no onboarding.
+It is one of the highest-leverage skills in software right now, and almost all of the knowledge is already floating around for free, scattered across arXiv papers, Discord servers, blog posts, half-abandoned awesome-lists, and 200k-star repos with no onboarding.
 
 This repo fixes the *ordering* problem.
 
@@ -31,9 +29,9 @@ It gives you:
 2. **A 6-stage roadmap** with concrete exit criteria, so you always know your next step.
 3. **A curated stack** of ~200 open-source projects with live star counts and licenses, so you pick the boring, correct tool.
 4. **17 buildable projects** with acceptance criteria, because infra is learned with your hands.
-5. **The math** — the back-of-envelope formulas that separate people who *configure* systems from people who *design* them.
+5. **The math**: the back-of-envelope formulas that separate people who *configure* systems from people who *design* them.
 
-> **What this is not:** a list of every AI repo on Earth. Curation means exclusion. If a tool is here, it earned its place for a learner or a practitioner. Star counts in tables are refreshed weekly by a bot (see [`scripts/refresh_stars.py`](scripts/refresh_stars.py)), so you can trust them as a rough signal of health — not as a substitute for reading the docs.
+> **What this is not:** a list of every AI repo on Earth. Curation means exclusion. If a tool is here, it earned its place for a learner or a practitioner. Star counts in tables are refreshed weekly by a bot (see [`scripts/refresh_stars.py`](scripts/refresh_stars.py)), so you can trust them as a rough signal of health, not as a substitute for reading the docs.
 
 **Last full data refresh:** 2026-10-04.
 
@@ -43,12 +41,12 @@ It gives you:
 
 | You are | Start here |
 |---|---|
-| **A backend / full-stack engineer** moving toward AI systems | [Stage 1](ROADMAP.md#stage-1--single-gpu-fluency) → [Stage 2](ROADMAP.md#stage-2--single-node-multi-gpu-and-real-serving) |
-| **An ML engineer** who can train models but has never tuned a serving engine | [Stage 2](ROADMAP.md#stage-2--single-node-multi-gpu-and-real-serving) → [Stage 3](ROADMAP.md#stage-3--multi-node-training-and-distributed-inference) |
-| **An SRE / platform engineer** inheriting a GPU cluster | [Cluster Ops Cheatsheet](cheatsheets/cluster-ops.md) → [Stage 3](ROADMAP.md#stage-3--multi-node-training-and-distributed-inference) → [Stage 4](ROADMAP.md#stage-4--platform-engineering) |
-| **A data engineer** moving into AI data infrastructure | [Stage 2](ROADMAP.md#stage-2--single-node-multi-gpu-and-real-serving) → [Stage 4](ROADMAP.md#stage-4--platform-engineering) |
-| **A student / career switcher** with no infra background | [Stage 0](ROADMAP.md#stage-0--foundations) and do not skip it |
-| **A senior engineer** who wants to go deep on performance | [Hardware](HARDWARE.md) → [Stage 5](ROADMAP.md#stage-5--frontier-performance-and-scale) |
+| **A backend / full-stack engineer** moving toward AI systems | [Stage 1](ROADMAP.md#stage-1-single-gpu-fluency) → [Stage 2](ROADMAP.md#stage-2-single-node-multi-gpu-and-real-serving) |
+| **An ML engineer** who can train models but has never tuned a serving engine | [Stage 2](ROADMAP.md#stage-2-single-node-multi-gpu-and-real-serving) → [Stage 3](ROADMAP.md#stage-3-multi-node-training-and-distributed-inference) |
+| **An SRE / platform engineer** inheriting a GPU cluster | [Cluster Ops Cheatsheet](cheatsheets/cluster-ops.md) → [Stage 3](ROADMAP.md#stage-3-multi-node-training-and-distributed-inference) → [Stage 4](ROADMAP.md#stage-4-platform-engineering) |
+| **A data engineer** moving into AI data infrastructure | [Stage 2](ROADMAP.md#stage-2-single-node-multi-gpu-and-real-serving) → [Stage 4](ROADMAP.md#stage-4-platform-engineering) |
+| **A student / career switcher** with no infra background | [Stage 0](ROADMAP.md#stage-0-foundations) and do not skip it |
+| **A senior engineer** who wants to go deep on performance | [Hardware](HARDWARE.md) → [Stage 5](ROADMAP.md#stage-5-frontier-performance-and-scale) |
 
 ---
 
@@ -74,16 +72,16 @@ flowchart LR
 | Layer | Question it answers | Read about it |
 |---|---|---|
 | **L0 Hardware** | How fast can bytes move, and how fast can chips talk? | [HARDWARE.md](HARDWARE.md) |
-| **L1 Runtime & compilers** | What turns my Python into something the chip runs well? | [STACK §L1](STACK.md#l1--runtime-kernels--compilers) |
-| **L2 Training & post-training** | How do I fit and improve a model? | [STACK §L2](STACK.md#l2--training--post-training) |
-| **L3 Inference & serving** | How do I answer requests fast and cheaply? | [STACK §L3](STACK.md#l3--inference--serving) |
-| **L4 Data & storage** | Where do the bytes live, and how do I move them? | [STACK §L4](STACK.md#l4--data--storage) |
-| **L5 Orchestration & scheduling** | Who gets which GPU, and when? | [STACK §L5](STACK.md#l5--orchestration--scheduling) |
-| **L6 Retrieval, context & memory** | How does the model see my data? | [STACK §L6](STACK.md#l6--retrieval-context--memory) |
-| **L7 Application & agent runtime** | How does it become a product? | [STACK §L7](STACK.md#l7--application--agent-runtime) |
-| **L8 Observability, eval & safety** | Is it good, fast, safe, and affordable? | [STACK §L8](STACK.md#l8--observability-evaluation-safety--governance) |
+| **L1 Runtime & compilers** | What turns my Python into something the chip runs well? | [STACK layer L1](STACK.md#l1--runtime-kernels--compilers) |
+| **L2 Training & post-training** | How do I fit and improve a model? | [STACK layer L2](STACK.md#l2--training--post-training) |
+| **L3 Inference & serving** | How do I answer requests fast and cheaply? | [STACK layer L3](STACK.md#l3--inference--serving) |
+| **L4 Data & storage** | Where do the bytes live, and how do I move them? | [STACK layer L4](STACK.md#l4--data--storage) |
+| **L5 Orchestration & scheduling** | Who gets which GPU, and when? | [STACK layer L5](STACK.md#l5--orchestration--scheduling) |
+| **L6 Retrieval, context & memory** | How does the model see my data? | [STACK layer L6](STACK.md#l6--retrieval-context--memory) |
+| **L7 Application & agent runtime** | How does it become a product? | [STACK layer L7](STACK.md#l7--application--agent-runtime) |
+| **L8 Observability, eval & safety** | Is it good, fast, safe, and affordable? | [STACK layer L8](STACK.md#l8--observability-evaluation-safety--governance) |
 
-**Cross-cutting, present at every layer:** ⚡ performance engineering · 💰 cost & capacity · 🛡️ reliability & security. These aren't stages you finish; they're habits that start at Stage 2 and never stop.
+**Cross-cutting, present at every layer:** performance engineering, cost and capacity, reliability and security. These aren't stages you finish; they're habits that start at Stage 2 and never stop.
 
 You do **not** need all nine to get hired or ship value. You need one layer deep and its neighbors shallow. The roadmap tells you which is which.
 
@@ -92,22 +90,22 @@ You do **not** need all nine to get hired or ship value. You need one layer deep
 ## Pick your entry point
 
 **"I want to run a model tonight."**
-→ [llama.cpp](https://github.com/ggml-org/llama.cpp) or [Ollama](https://github.com/ollama/ollama). Then read [Stage 1](ROADMAP.md#stage-1--single-gpu-fluency) and learn *why* it's slow.
+Start with [llama.cpp](https://github.com/ggml-org/llama.cpp) or [Ollama](https://github.com/ollama/ollama). Then read [Stage 1](ROADMAP.md#stage-1-single-gpu-fluency) and learn *why* it's slow.
 
 **"I want to serve a model to real users, cheaply."**
-→ [vLLM](https://github.com/vllm-project/vllm) + the [Inference Math cheatsheet](cheatsheets/inference-math.md). Stage 2 is written for you.
+Start with [vLLM](https://github.com/vllm-project/vllm) + the [Inference Math cheatsheet](cheatsheets/inference-math.md). Stage 2 is written for you.
 
 **"I want to fine-tune something."**
-→ [Unsloth](https://github.com/unslothai/unsloth) or [LlamaFactory](https://github.com/hiyouga/LlamaFactory) to get a result, then [PEFT/TRL](https://github.com/huggingface/peft) to understand what you actually did.
+Start with [Unsloth](https://github.com/unslothai/unsloth) or [LlamaFactory](https://github.com/hiyouga/LlamaFactory) to get a result, then [PEFT/TRL](https://github.com/huggingface/peft) to understand what you actually did.
 
 **"I have GPUs and no idea how to schedule them."**
-→ [Cluster Ops Cheatsheet](cheatsheets/cluster-ops.md), then [SkyPilot](https://github.com/skypilot-org/skypilot) and [Slurm](https://github.com/SchedMD/slurm)/[Kueue](https://github.com/kubernetes-sigs/kueue).
+Start with [Cluster Ops Cheatsheet](cheatsheets/cluster-ops.md), then [SkyPilot](https://github.com/skypilot-org/skypilot) and [Slurm](https://github.com/SchedMD/slurm)/[Kueue](https://github.com/kubernetes-sigs/kueue).
 
 **"I want to build agents that don't fall over."**
-→ [LangGraph](https://github.com/langchain-ai/langgraph) + [LiteLLM](https://github.com/BerriAI/litellm) + [Langfuse](https://github.com/langfuse/langfuse). Traces before frameworks.
+Start with [LangGraph](https://github.com/langchain-ai/langgraph) + [LiteLLM](https://github.com/BerriAI/litellm) + [Langfuse](https://github.com/langfuse/langfuse). Traces before frameworks.
 
 **"I want the theory, not the tools."**
-→ [RESOURCES.md](RESOURCES.md) papers list, [HARDWARE.md](HARDWARE.md), and Stanford CS336.
+Start with [RESOURCES.md](RESOURCES.md) papers list, [HARDWARE.md](HARDWARE.md), and Stanford CS336.
 
 ---
 
@@ -115,16 +113,16 @@ You do **not** need all nine to get hired or ship value. You need one layer deep
 
 Each stage has exit criteria. Do not move on until you can hit them.
 
-| Stage | Theme | You can, at the end… | Realistic time\* |
+| Stage | Theme | What it prepares you for | Exit criteria |
 |---|---|---|---|
-| [**0**](ROADMAP.md#stage-0--foundations) | Foundations | Read a profiler, reason in bytes, survive Linux | 2–4 weeks |
-| [**1**](ROADMAP.md#stage-1--single-gpu-fluency) | Single-GPU fluency | Run, profile, and fine-tune on one GPU | 4–6 weeks |
-| [**2**](ROADMAP.md#stage-2--single-node-multi-gpu-and-real-serving) | Multi-GPU & serving | Serve an LLM at target latency/cost with vLLM | 6–8 weeks |
-| [**3**](ROADMAP.md#stage-3--multi-node-training-and-distributed-inference) | Multi-node | Debug a multi-node run and a disaggregated deployment | 8–12 weeks |
-| [**4**](ROADMAP.md#stage-4--platform-engineering) | Platform | Operate a shared GPU cluster other teams trust | 3–6 months |
-| [**5**](ROADMAP.md#stage-5--frontier-performance-and-scale) | Frontier | Own performance and reliability at cluster scale | ongoing |
+| [**0**](ROADMAP.md#stage-0-foundations) | Foundations | Reading a profiler, reasoning in bytes, surviving Linux | You can predict memory and find a bottleneck |
+| [**1**](ROADMAP.md#stage-1-single-gpu-fluency) | Single-GPU fluency | Running, profiling, and fine-tuning on one GPU | You predict VRAM and throughput, and can compute a KV cache |
+| [**2**](ROADMAP.md#stage-2-single-node-multi-gpu-and-real-serving) | Multi-GPU and serving | Serving an LLM at a target latency and cost | You produce a latency-throughput curve and a $/1M-token figure |
+| [**3**](ROADMAP.md#stage-3-multi-node-training-and-distributed-inference) | Multi-node | Debugging a multi-node run and a disaggregated deployment | You can diagnose an NCCL hang to a rank and defend a parallelism plan |
+| [**4**](ROADMAP.md#stage-4-platform-engineering) | Platform | Operating a shared GPU cluster other teams trust | You defend a capacity plan and a cost dashboard that changed a decision |
+| [**5**](ROADMAP.md#stage-5-frontier-performance-and-scale) | Frontier | Owning performance and reliability at cluster scale | Your optimizations show up as numbers on a production dashboard |
 
-\*At ~8–10 focused hours/week with prior software experience. Faster if you already know Linux and distributed systems; slower is fine.
+Stages are ordered by dependency, not by duration. Move on when the exit criteria are true, not when a calendar says so.
 
 ---
 
@@ -169,7 +167,7 @@ One pick per layer. Boring, maintained, and overwhelmingly the community default
 Infra is not learned by reading. Use this loop:
 
 1. **Pick your stage** in [ROADMAP.md](ROADMAP.md). Read only that stage.
-2. **Build the stage's project** in [PROJECTS.md](PROJECTS.md). Struggle for an hour before searching.
+2. **Build the stage's project** in [PROJECTS.md](PROJECTS.md). Struggle before you search.
 3. **When something is slow or broken**, look up the layer in [STACK.md](STACK.md) and the formula in [cheatsheets/](cheatsheets/).
 4. **Measure, then change one thing.** Score = tokens/sec, $/1M tokens, MFU, p99 latency, or eval delta.
 5. **Write the number down.** A benchmark you didn't record didn't happen.
@@ -181,11 +179,11 @@ Infra is not learned by reading. Use this loop:
 
 ## The landscape: what else exists (and how to use it together)
 
-This repo complements the giants below. None of them is a substitute for the others — but none of them is a roadmap either.
+This repo complements the giants below. None of them is a substitute for the others, but none of them is a roadmap either.
 
 | Resource | Stars | Best for | Overlap with this repo |
 |---|---:|---|---|
-| [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19.1k | Deep, practical ML-engineering book (hardware, debugging, SLURM, reduction) | **Read it** alongside Stages 1–4. More depth, less ordering. |
+| [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19.1k | Deep, practical ML-engineering book (hardware, debugging, SLURM, reduction) | **Read it** alongside Stages 1-4. More depth, less ordering. |
 | [HuaizhengZhang/AI-Infra-from-Zero-to-Hero](https://github.com/HuaizhengZhang/AI-Infra-from-Zero-to-Hero) | 4.4k | Paper + industry-practice reading list per topic | The paper layer of [RESOURCES.md](RESOURCES.md), expanded |
 | [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 5.8k | Quantitative derivation of LLM inference/training system design | The math in [HARDWARE.md](HARDWARE.md), taken much further |
 | [modular/llm-inference-handbook](https://github.com/modular/llm-inference-handbook) | 0.4k | Concise inference fundamentals | A good Stage 2 companion |
@@ -193,7 +191,7 @@ This repo complements the giants below. None of them is a substitute for the oth
 | [deepseek-ai/open-infra-index](https://github.com/deepseek-ai/open-infra-index) | 8.1k | Production-tested infra tool index from a frontier lab | A second opinion on [STACK.md](STACK.md) |
 | [liguodongiot/llm-action](https://github.com/liguodongiot/llm-action) | 25.1k | Huge practical LLM-engineering guide (zh/en) | Broad; useful reference, not a path |
 | [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 106.0k | Build a transformer from zero | The *model* half of Stage 1, which this repo skips |
-| [mlabonne/llm-course](https://github.com/mlabonne/llm-course) | 83.3k | Scientist / engineer / LLM tracks with notebooks | Overlaps Stages 0–1; we go deeper on infra |
+| [mlabonne/llm-course](https://github.com/mlabonne/llm-course) | 83.3k | Scientist / engineer / LLM tracks with notebooks | Overlaps Stages 0-1; we go deeper on infra |
 | [NirDiamant/agents-towards-production](https://github.com/NirDiamant/agents-towards-production) | 21.5k | Agent production patterns | Layer 7+8 depth |
 
 **What we do differently:** a single progressive path with *exit criteria*, *the cluster-scale half of the stack* (scheduling, storage, interconnects, FinOps), and *live data* on every tool. Most resources stop at "here is a model" or "here are 400 repos." This one asks "how do you run it for a million users without setting money on fire?"
@@ -202,7 +200,7 @@ This repo complements the giants below. None of them is a substitute for the oth
 
 ## Contributing
 
-Additions are welcome if they make the path **clearer** or the stack **more correct**. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first — it explains the bar, the table format, and how to run the link and star checkers.
+Additions are welcome if they make the path **clearer** or the stack **more correct**. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first; it explains the bar, the table format, and how to run the link and star checkers.
 
 Good first contributions:
 
@@ -219,8 +217,8 @@ MIT. Use it, fork it, teach from it, sell services around it. Attribution apprec
 
 <div align="center">
 
-**If this saved you a week, star it so someone else finds it.**
+**If this was useful, star it so someone else finds it.**
 
-<sub>Maintained by [@iambiniyam](https://github.com/iambiniyam). Corrections &gt; praise.</sub>
+<sub>Maintained by [@iambiniyam](https://github.com/iambiniyam). Corrections are more useful than praise.</sub>
 
 </div>

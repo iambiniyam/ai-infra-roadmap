@@ -1,4 +1,4 @@
-# 🖥 GPU Cluster Ops Cheatsheet
+# GPU Cluster Ops Cheatsheet
 
 Bring-up, health, scheduling, and incident triage for a GPU fleet. Written for the person on call.
 
@@ -6,16 +6,16 @@ Bring-up, health, scheduling, and incident triage for a GPU fleet. Written for t
 
 ## 1. New node bring-up checklist
 
-- [ ] **Drivers** — version match across the fleet; `nvidia-smi` shows all GPUs at expected power/clocks.
-- [ ] **Fabric** — IB link state `Active` (`ibstat`), correct rate, no symbol errors.
-- [ ] **Topology** — `nvidia-smi topo -m` matches the intended NVLink/PCIe layout.
-- [ ] **NCCL** — `nccl-tests` intra-node passes at expected bus bandwidth.
-- [ ] **Storage mounts** — dataset and checkpoint paths mounted and writable at expected throughput (`fio` or `dd`).
-- [ ] **Container runtime** — `--gpus all` works; the device plugin reports GPUs.
-- [ ] **Telemetry** — DCGM exporter → Prometheus; node appears in Grafana.
-- [ ] **Burn-in** — 30–60 min of sustained load; watch power, temperature, XID, ECC.
-- [ ] **Scheduler** — node joins with correct labels/taints (`gpu=H100`, MIG, topology).
-- [ ] **Docs** — node added to inventory with serial numbers and rack position.
+- [ ] **Drivers**: version match across the fleet; `nvidia-smi` shows all GPUs at expected power/clocks.
+- [ ] **Fabric**: IB link state `Active` (`ibstat`), correct rate, no symbol errors.
+- [ ] **Topology**: `nvidia-smi topo -m` matches the intended NVLink/PCIe layout.
+- [ ] **NCCL**: `nccl-tests` intra-node passes at expected bus bandwidth.
+- [ ] **Storage mounts**: dataset and checkpoint paths mounted and writable at expected throughput (`fio` or `dd`).
+- [ ] **Container runtime**: `--gpus all` works; the device plugin reports GPUs.
+- [ ] **Telemetry**: DCGM exporter → Prometheus; node appears in Grafana.
+- [ ] **Burn-in**: 30-60 min of sustained load; watch power, temperature, XID, ECC.
+- [ ] **Scheduler**: node joins with correct labels/taints (`gpu=H100`, MIG, topology).
+- [ ] **Docs**: node added to inventory with serial numbers and rack position.
 
 > **Rule:** a node is not "ready" because it booted. It's ready when it passed burn-in and appears in telemetry.
 
@@ -105,9 +105,9 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -50
 ## 5. Storage & checkpoint hygiene
 
 - **Checkpoint write bandwidth** must let you save the full checkpoint in < 2 minutes. Measure it, don't assume it.
-- **Never write checkpoints directly to the object store** if latency matters — stage on parallel FS or local NVMe, then copy.
+- **Never write checkpoints directly to the object store** if latency matters; stage on parallel FS or local NVMe, then copy.
 - **Version your datasets**; a silent dataset change invalidates every result.
-- **Watch the many-small-files problem** — shard datasets into large files before training.
+- **Watch the many-small-files problem**: shard datasets into large files before training.
 - **Alert on storage saturation**, not on storage failure. Full or slow storage kills runs faster than dead disks.
 
 ---
@@ -116,9 +116,9 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -50
 
 ### "Training job is stuck / hung"
 
-1. `nvidia-smi` everywhere — any GPU at 0% while others are busy is your suspect.
+1. `nvidia-smi` everywhere. Any GPU at 0% while others are busy is your suspect.
 2. Check the rendezvous/master address reachability and firewall.
-3. `NCCL_DEBUG=INFO` on a short reproduction — is IB being used?
+3. `NCCL_DEBUG=INFO` on a short reproduction: is IB being used?
 4. Enable the flight recorder; dump the trace buffer on timeout.
 5. Check for a slow rank (per-rank step times), network error counters, and thermal throttling.
 6. If a single GPU is bad: drain the node, quarantine it, restart the job.
@@ -126,8 +126,8 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -50
 ### "Loss is NaN"
 
 1. Check LR, warmup, and grad clipping.
-2. Check dtype — bf16 is more forgiving than fp16 without loss scaling.
-3. Check the data — any malformed/empty samples?
+2. Check dtype: bf16 is more forgiving than fp16 without loss scaling.
+3. Check the data: any malformed or empty samples?
 4. Reproduce at small scale; bisect the config.
 
 ### "Throughput dropped 30% overnight"

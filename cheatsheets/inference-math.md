@@ -1,4 +1,4 @@
-# ⚡ Inference Math Cheatsheet
+# Inference Math Cheatsheet
 
 Everything you need to size, tune, and price an LLM deployment. Print this.
 
@@ -7,7 +7,7 @@ Everything you need to size, tune, and price an LLM deployment. Print this.
 ## 1. Memory
 
 ```text
-Total VRAM ≈ weights + KV cache + activations + overhead(~1–3 GB)
+Total VRAM ≈ weights + KV cache + activations + overhead(~1-3 GB)
 
 weights       = params × bytes_per_param
 KV cache      = 2 × n_layers × n_kv_heads × head_dim × seq_len × batch × kv_bytes
@@ -39,7 +39,7 @@ prefill acts  ≈ batch × seq_len × hidden × precision_bytes × (small factor
 Decode ceiling (batch 1)  ≈ HBM_bandwidth ÷ weights_bytes
                         ≈ 3.35 TB/s ÷ 16 GB ≈ 209 tok/s   (8B bf16 on H100)
 
-Realistic single-stream: 50–70% of that → 100–150 tok/s
+Realistic single-stream: 50-70% of that → 100-150 tok/s
 With batching, throughput ≈ ceiling × batch (until compute-bound)
 ```
 
@@ -63,7 +63,7 @@ With batching, throughput ≈ ceiling × batch (until compute-bound)
 | **Goodput** | Tokens/s *meeting the SLO* | The number to optimize |
 | **p95 / p99** | Tail latencies | What users actually complain about |
 | **$/1M tokens** | Cost per million tokens in/out | The business number |
-| **GPU util** | SM occupancy / HBM utilization | 30–70% for serving is healthy |
+| **GPU util** | SM occupancy / HBM utilization | 30-70% for serving is healthy |
 
 ---
 
@@ -78,27 +78,27 @@ Example: 2×H100 node @ $5.00/hr, 1,500 output tok/s
 
 **Lever order (biggest first):**
 
-1. **Right-size the model** — a smaller model that passes evals beats a big one that doesn't pay for itself.
-2. **Quantize** — FP8/AWQ/INT4 reduces bytes ⇒ faster decode and more batch headroom.
-3. **Batch** — biggest throughput lever; costs latency.
-4. **Prefix caching** — eliminates redundant prefill on shared system prompts / few-shot.
-5. **Quantized KV cache** — more concurrent long contexts per GPU.
-6. **Speculative decoding** — lower latency per token at slightly higher compute.
-7. **Disaggregation** — better TTFT under long-prompt traffic; not always a win.
-8. **Hardware mix** — cheap cards for cheap models; don't brute-force with H100s.
+1. **Right-size the model**: a smaller model that passes evals beats a big one that doesn't pay for itself.
+2. **Quantize**: FP8/AWQ/INT4 reduces bytes, which means faster decode and more batch headroom.
+3. **Batch**: biggest throughput lever; costs latency.
+4. **Prefix caching**: eliminates redundant prefill on shared system prompts / few-shot.
+5. **Quantized KV cache**: more concurrent long contexts per GPU.
+6. **Speculative decoding**: lower latency per token at slightly higher compute.
+7. **Disaggregation**: better TTFT under long-prompt traffic; not always a win.
+8. **Hardware mix**: cheap cards for cheap models; don't brute-force with H100s.
 
 ---
 
 ## 5. Tuning order (do it in this sequence)
 
-1. **Model + precision** — pick the smallest model that passes evals; start at bf16, then quantize.
-2. **`max_model_len`** — set to what you actually need. Context is memory; memory is cost.
-3. **`max_num_seqs` / batch** — raise until the latency SLO is at risk, then back off ~20%.
-4. **KV cache dtype** — FP8 if quality tolerates it.
-5. **Prefix caching** — enable if prompts share prefixes (they usually do).
-6. **Chunked prefill** — enable for long prompts to protect ITL.
-7. **Speculative decoding** — only after the above.
-8. **Replicas + routing** — horizontal scaling, cache-aware load balancing.
+1. **Model + precision**: pick the smallest model that passes evals; start at bf16, then quantize.
+2. **`max_model_len`**: set to what you actually need. Context is memory; memory is cost.
+3. **`max_num_seqs` / batch**: raise until the latency SLO is at risk, then back off ~20%.
+4. **KV cache dtype**: FP8 if quality tolerates it.
+5. **Prefix caching**: enable if prompts share prefixes (they usually do).
+6. **Chunked prefill**: enable for long prompts to protect ITL.
+7. **Speculative decoding**: only after the above.
+8. **Replicas + routing**: horizontal scaling, cache-aware load balancing.
 
 At every step: **measure one change at a time, and keep the config pinned in git.**
 

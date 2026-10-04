@@ -1,20 +1,20 @@
-# 🗺 The Roadmap
+# The Roadmap
 
-Six stages. Each one ends with **exit criteria** — concrete things you must be able to do before moving on. The stages compound: Stage 2 assumes you can profile; Stage 3 assumes you understand collectives.
+Six stages. Each one ends with **exit criteria**: concrete things you must be able to do before moving on. The stages compound: Stage 2 assumes you can profile; Stage 3 assumes you understand collectives.
 
 > **How to read this file:** pick your stage, read only that section, build the matching project in [PROJECTS.md](PROJECTS.md), and come back when the exit criteria are true. Struggle first, search second, ask third.
 
-**Jump to:** [Stage 0](#stage-0--foundations) · [Stage 1](#stage-1--single-gpu-fluency) · [Stage 2](#stage-2--single-node-multi-gpu-and-real-serving) · [Stage 3](#stage-3--multi-node-training-and-distributed-inference) · [Stage 4](#stage-4--platform-engineering) · [Stage 5](#stage-5--frontier-performance-and-scale) · [Cross-cutting skills](#cross-cutting-skills)
+**Jump to:** [Stage 0](#stage-0-foundations) · [Stage 1](#stage-1-single-gpu-fluency) · [Stage 2](#stage-2-single-node-multi-gpu-and-real-serving) · [Stage 3](#stage-3-multi-node-training-and-distributed-inference) · [Stage 4](#stage-4-platform-engineering) · [Stage 5](#stage-5-frontier-performance-and-scale) · [Cross-cutting skills](#cross-cutting-skills)
 
 ---
 
-## Stage 0 — Foundations
+## Stage 0: Foundations
 
 > **Goal:** be dangerous in a terminal, literate in the units of the field, and able to reason about bytes and bandwidth.
-> **Time:** 2–4 weeks · **Prereq:** can write code in some language.
+> **Prereq:** you can write code in some language.
 > **Skip if:** you've operated Linux servers and know what a GPU's HBM bandwidth is.
 
-The most common reason people bounce off AI infra is not AI — it's that they can't debug a container, read a profiler, or reason in bytes. Fix that first. It is genuinely a few weeks of work.
+The most common reason people bounce off AI infra is not AI; it's that they can't debug a container, read a profiler, or reason in bytes. Fix that first. It is a bounded amount of work, and everything above depends on it.
 
 ### Skills checklist
 
@@ -33,7 +33,7 @@ The most common reason people bounce off AI infra is not AI — it's that they c
 |---|---|---|
 | HBM bandwidth (H100) | ~3.35 TB/s | Most LLM inference at batch 1 is *bandwidth*-bound, not compute-bound |
 | NVLink (H100) | ~900 GB/s per GPU | Intra-node tensor parallelism lives or dies here |
-| InfiniBand (NDR, per port) | ~50 GB/s | Inter-node all-reduce is ~18x slower than NVLink — this drives every multi-node design |
+| InfiniBand (NDR, per port) | ~50 GB/s | Inter-node all-reduce is ~18x slower than NVLink; this drives every multi-node design |
 
 ### Labs
 
@@ -47,12 +47,12 @@ The most common reason people bounce off AI infra is not AI — it's that they c
 
 | Resource | Why |
 |---|---|
-| [MIT Missing Semester](https://missing.csail.mit.edu/) | Shell, git, debugging, profiling — the actual prereqs |
+| [MIT Missing Semester](https://missing.csail.mit.edu/) | Shell, git, debugging, profiling, the actual prereqs |
 | [MIT 6.172 Performance Engineering](https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/) | Makes you think in cache lines and cycles |
 | [Kubernetes docs + "Kubernetes the Hard Way"](https://github.com/kelseyhightower/kubernetes-the-hard-way) | Understand K8s instead of cargo-culting it |
-| [Brendan Gregg — Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html) | The USE method; free chapters online |
+| [Brendan Gregg: Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html) | The USE method; free chapters online |
 | [Latency Numbers Every Programmer Should Know](https://gist.github.com/jboner/2841832) | Memorize these |
-| [Stanford CS336 — Language Modeling from Scratch](https://stanford-cs336.github.io/) | Start watching now; it pays off in Stage 1 |
+| [Stanford CS336: Language Modeling from Scratch](https://stanford-cs336.github.io/) | Start watching now; it pays off in Stage 1 |
 
 ### Exit criteria
 
@@ -65,10 +65,10 @@ The most common reason people bounce off AI infra is not AI — it's that they c
 
 ---
 
-## Stage 1 — Single-GPU fluency
+## Stage 1: Single-GPU fluency
 
-> **Goal:** own one GPU end-to-end — train, fine-tune, serve, profile, and predict.
-> **Time:** 4–6 weeks · **Prereq:** Stage 0.
+> **Goal:** own one GPU end to end: train, fine-tune, serve, profile, and predict.
+> **Prereq:** Stage 0.
 > **Skip if:** you've profiled a training run and can compute a KV cache size.
 
 ### Skills checklist
@@ -97,7 +97,7 @@ The most common reason people bounce off AI infra is not AI — it's that they c
 ```text
 KV cache bytes = 2 (K and V) × n_layers × n_kv_heads × head_dim × seq_len × batch × bytes_per_value
 
-Example — Llama-3 8B (32 layers, 8 KV heads, head_dim 128, bf16):
+Example, Llama-3 8B (32 layers, 8 KV heads, head_dim 128, bf16):
   4k context, batch 1  → 2×32×8×128×4096×1×2  ≈ 0.54 GB
   32k context, batch 1 →                                ≈ 4.3 GB
   32k context, batch 32 →                               ≈ 138 GB   ← why long-context serving is hard
@@ -109,31 +109,31 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 
 | Resource | Why |
 |---|---|
-| [Sebastian Raschka — LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch) | Build the transformer, no gaps |
-| [Karpathy — Zero to Hero](https://karpathy.ai/zero-to-hero.html) + [nanoGPT](https://github.com/karpathy/nanoGPT) | The clearest path from math to code |
+| [Sebastian Raschka: LLMs from Scratch](https://github.com/rasbt/LLMs-from-scratch) | Build a transformer from scratch, with no gaps |
+| [Karpathy: Zero to Hero](https://karpathy.ai/zero-to-hero.html) + [nanoGPT](https://github.com/karpathy/nanoGPT) | The clearest path from math to code |
 | [Hugging Face LLM Course](https://huggingface.co/learn/llm-course) | Transformers, tokenizers, fine-tuning, PEFT |
 | [Unsloth notebooks](https://github.com/unslothai/unsloth) | Fastest way to a working fine-tune |
-| [Horace He — Making Deep Learning Go Brrrr](https://horace.io/brrr_intro.html) | The best intuition for compute- vs memory-bound |
+| [Horace He: Making Deep Learning Go Brrrr](https://horace.io/brrr_intro.html) | The best intuition for compute- vs memory-bound |
 | [PyTorch profiler recipes](https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html) | Actually use the profiler |
 | [GPU MODE lectures](https://github.com/gpu-mode/lectures) | CUDA/Triton/performance, straight from practitioners |
 | [Modal / Together LLM fine-tuning guides](https://modal.com/docs/examples) | Practical recipes with cost math |
 
 ### Exit criteria
 
-- Given a model, GPU, and batch size, you predict VRAM and throughput within 2x — then explain the error.
+- Given a model, GPU, and batch size, you predict VRAM and throughput within 2x; then explain the error.
 - You can explain why single-stream LLM inference is memory-bandwidth-bound and what changes at large batch.
 - You compute a KV cache for any config in under a minute.
 - You produce an MFU number for your training run and say whether it's good.
 - You can state the quality/size/speed trade of at least three quantization schemes.
 
-**Common trap:** fine-tuning before evaluation. If you can't measure the delta, you didn't fine-tune — you perturbed.
+**Common trap:** fine-tuning before evaluation. If you can't measure the delta, you didn't fine-tune. You perturbed the weights and hoped.
 
 ---
 
-## Stage 2 — Single-node multi-GPU and real serving
+## Stage 2: Single-node multi-GPU and real serving
 
 > **Goal:** use all 8 GPUs in a box well, and serve a model to a latency/cost target.
-> **Time:** 6–8 weeks · **Prereq:** Stage 1.
+> **Prereq:** Stage 1.
 > **Skip if:** you've published a latency-throughput curve and a $/1M-token figure.
 
 ### Skills checklist
@@ -141,17 +141,17 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 - [ ] **Collectives:** all-reduce, all-gather, reduce-scatter, all-to-all; ring vs tree; why all-to-all is the MoE tax
 - [ ] **Topology:** NVLink/NVSwitch vs PCIe, NUMA affinity, and how topology dictates parallel strategy
 - [ ] **Data parallel → sharded:** DDP → FSDP/ZeRO-1/2/3, and the memory-vs-communication trade at each stage
-- [ ] **Parallelism basics:** tensor parallel (TP) and pipeline parallel (PP) — enough to configure them, not just name them
+- [ ] **Parallelism basics:** tensor parallel (TP) and pipeline parallel (PP): enough to configure them, not just name them
 - [ ] **Serving engine internals:** PagedAttention, continuous batching, chunked prefill, prefix caching, KV-cache blocks, scheduling
-- [ ] **Serving metrics:** TTFT, TPOT/ITL, tokens/sec, **goodput**, and p50/p95/p99 — and how batch size moves each
-- [ ] **Serving quantization:** FP8, AWQ, GPTQ, NVFP4 — with an accuracy check
+- [ ] **Serving metrics:** TTFT, TPOT/ITL, tokens/sec, **goodput**, and p50/p95/p99, plus how batch size moves each
+- [ ] **Serving quantization:** FP8, AWQ, GPTQ, NVFP4, with an accuracy check
 - [ ] **Advanced decoding:** speculative decoding, structured output/grammars, and multi-LoRA serving
 - [ ] **Benchmarking discipline:** warmup, steady state, concurrency sweeps, fixed prompt distributions, reproducible configs
 
 ### Labs
 
 1. **Scaling sweep.** Run the same training job as DDP (8×1) and FSDP (1×8). Report tokens/sec and scaling efficiency. Explain the gap using NCCL topology.
-2. **Latency–throughput curve.** Serve a 7B–13B on vLLM. Sweep concurrency from 1 → 512. Plot TTFT vs throughput and identify the knee. Save the plot — it's your portfolio artifact.
+2. **Latency-throughput curve.** Serve a 7B-13B on vLLM. Sweep concurrency from 1 → 512. Plot TTFT vs throughput and identify the knee. Save the plot; it's your portfolio artifact.
 3. **Beat your own baseline.** Starting from Lab 2, enable prefix caching, FP8 KV cache, chunked prefill, and `--max-num-seqs` tuning. Log each change with its delta in ms and $.
 4. **Cost per token.** From measured throughput and the GPU's $/hour, compute $/1M input and output tokens. Optimize *cost per token at fixed SLO*, not raw tok/s.
 5. **Multi-LoRA.** Serve one base model with 5 adapters. Measure memory overhead and per-adapter latency. Explain why this is cheaper than 5 models.
@@ -163,16 +163,16 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 |---|---|
 | [vLLM docs](https://docs.vllm.ai/) + [vLLM paper (PagedAttention)](https://arxiv.org/abs/2309.06180) | Read the docs *and* the paper |
 | [SGLang docs](https://docs.sglang.ai/) + [RadixAttention paper](https://arxiv.org/abs/2312.07104) | The other major engine; prefix-cache-first design |
-| [Hugging Face — Efficient Training on Multiple GPUs](https://huggingface.co/docs/transformers/perf_train_gpu_many) | FSDP/TP/PP decision guide |
+| [Hugging Face: Efficient Training on Multiple GPUs](https://huggingface.co/docs/transformers/perf_train_gpu_many) | FSDP/TP/PP decision guide |
 | [DeepSpeed ZeRO tutorial](https://www.deepspeed.ai/tutorials/zero/) | The canonical sharding explanation |
-| [NVIDIA — Mastering LLM Techniques: Inference](https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/) | Batching, KV cache, quantization in one place |
-| [Databricks — LLM Inference Performance Engineering](https://www.databricks.com/blog/llm-inference-performance-engineering-best-practices) | Real numbers and best practices |
-| [Anyscale — Continuous batching & serving](https://www.anyscale.com/blog/continuous-batching-llm-inference) | Understand the scheduler |
+| [NVIDIA: Mastering LLM Techniques: Inference](https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/) | Batching, KV cache, quantization in one place |
+| [Databricks: LLM Inference Performance Engineering](https://www.databricks.com/blog/llm-inference-performance-engineering-best-practices) | Real numbers and best practices |
+| [Anyscale: Continuous batching & serving](https://www.anyscale.com/blog/continuous-batching-llm-inference) | Understand the scheduler |
 | [vLLM `benchmarks/`](https://github.com/vllm-project/vllm/tree/main/benchmarks) | Steal their methodology |
 
 ### Exit criteria
 
-- You have a latency–throughput curve for a real model and can pick a config for a stated SLO.
+- You have a latency-throughput curve for a real model and can pick a config for a stated SLO.
 - You produce a $/1M-token number and defend the assumptions.
 - You explain PagedAttention and continuous batching without notes.
 - Given two GPUs with different interconnects, you predict scaling efficiency.
@@ -182,15 +182,15 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 
 ---
 
-## Stage 3 — Multi-node training and distributed inference
+## Stage 3: Multi-node training and distributed inference
 
-> **Goal:** cross the node boundary — the place where most people's intuition breaks.
-> **Time:** 8–12 weeks · **Prereq:** Stage 2 + access to ≥2 nodes (cloud spot is fine).
+> **Goal:** cross the node boundary: the place where most people's intuition breaks.
+> **Prereq:** Stage 2, plus access to at least two nodes (cloud spot instances are fine).
 > **Skip if:** you've debugged an NCCL hang across nodes to a specific rank and link.
 
 ### Skills checklist
 
-- [ ] **Parallelism taxonomy:** DP, TP, PP, EP, SP, CP, FSDP/HSDP, and 2D/3D/4D composition — plus how to *choose* for a given model/cluster
+- [ ] **Parallelism taxonomy:** DP, TP, PP, EP, SP, CP, FSDP/HSDP, and 2D/3D/4D composition, plus how to *choose* for a given model/cluster
 - [ ] **Interconnects:** InfiniBand vs RoCE, fat-tree vs rail-optimized topology, NCCL algorithm selection, and NVLink vs IB bandwidth ratios
 - [ ] **MoE specifics:** expert parallelism, all-to-all, capacity factors, load balancing, and communication cost
 - [ ] **Checkpointing:** sharded, async, and resumable; storage bandwidth required to hit your recovery objective
@@ -215,7 +215,7 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 | [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | The best free book on the debugging half of this stage |
 | [Megatron-LM docs & paper](https://github.com/NVIDIA/Megatron-LM) | The reference for TP/PP/EP at scale |
 | [NCCL tests & NVIDIA docs](https://github.com/NVIDIA/nccl-tests) | Measure before you theorize |
-| [Google — How to Scale Your Model](https://jax-ml.github.io/scaling-book/) | Rigorous, hardware-grounded scaling math (JAX-flavored, universally useful) |
+| [Google: How to Scale Your Model](https://jax-ml.github.io/scaling-book/) | Rigorous, hardware-grounded scaling math (JAX-flavored, universally useful) |
 | [DeepSpeed / FSDP + TP docs](https://huggingface.co/docs/transformers/perf_train_gpu_many) | Practical configs |
 | [NVIDIA Dynamo](https://github.com/ai-dynamo/dynamo) + [llm-d](https://github.com/llm-d/llm-d) | Production disaggregated serving |
 | [Slurm quickstart](https://slurm.schedmd.com/quickstart.html) | The HPC scheduler you'll meet at every lab |
@@ -233,10 +233,10 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 
 ---
 
-## Stage 4 — Platform engineering
+## Stage 4: Platform engineering
 
 > **Goal:** run a shared GPU platform that other teams trust, and know what it costs.
-> **Time:** 3–6 months · **Prereq:** Stage 3.
+> **Prereq:** Stage 3.
 > **Skip if:** you've owned an SLO for a shared AI service and a FinOps dashboard that changed a decision.
 
 At this stage the bottleneck stops being technical and becomes organizational: fairness, cost, reliability, and other people's deadlines.
@@ -266,10 +266,10 @@ At this stage the bottleneck stops being technical and becomes organizational: f
 
 | Resource | Why |
 |---|---|
-| [Google SRE Book](https://sre.google/books/) | SLOs, error budgets, incident management — free |
+| [Google SRE Book](https://sre.google/books/) | SLOs, error budgets, and incident management. Free |
 | [The Datacenter as a Computer](https://research.google/pubs/the-datacenter-as-a-computer-an-introduction-to-the-design-of-warehouse-scale-machines/) | Warehouse-scale thinking, free PDF |
 | [Kubernetes + Kueue + Volcano docs](https://kueue.sigs.k8s.io/) | The quota/fairness primitives |
-| [Designing Machine Learning Systems — Chip Huyen](https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/) | The lifecycle; companion [MLOps Zoomcamp](https://github.com/DataTalksClub/mlops-zoomcamp) is free |
+| [Designing Machine Learning Systems: Chip Huyen](https://www.oreilly.com/library/view/designing-machine-learning/9781098107956/) | The lifecycle; companion [MLOps Zoomcamp](https://github.com/DataTalksClub/mlops-zoomcamp) is free |
 | [MLFinOps / DCGM + Prometheus](https://github.com/NVIDIA/dcgm-exporter) | GPU telemetry you can chart |
 | [FinOps Foundation](https://www.finops.org/framework/) | The vocabulary your finance team uses |
 | [CNCF Landscape](https://landscape.cncf.io/) | Where the platform pieces come from |
@@ -286,10 +286,10 @@ At this stage the bottleneck stops being technical and becomes organizational: f
 
 ---
 
-## Stage 5 — Frontier performance and scale
+## Stage 5: Frontier performance and scale
 
 > **Goal:** be the person who makes the whole system faster, cheaper, and harder to break.
-> **Time:** ongoing · **Prereq:** Stage 4, or deep specialization in one layer.
+> **Prereq:** Stage 4, or deep specialization in one layer.
 > **Skip if:** your changes already move production dashboards by 2x.
 
 ### Skills checklist
@@ -346,20 +346,20 @@ These are not a stage. They're multipliers that start at Stage 2 and never stop.
 
 ---
 
-## A 90-day starter plan
+## A suggested build order
 
-If you're starting from scratch and want the fastest legitimate progress:
+If you are starting from scratch, do the work in this order. There is deliberately no schedule attached: how long each step takes depends on how much time you have and how much of it you already know.
 
-| Weeks | Do this | Proof you did it |
+| Order | Do this | Proof you did it |
 |---|---|---|
-| 1–2 | Stage 0 labs 1–4; watch GPU MODE + CS336 lecture 1 | A bytes-and-bandwidth memo with your machine's real numbers |
-| 3–5 | Stage 1 labs 1–3 | A fine-tune with a loss curve + a tok/s table at 3 context lengths |
-| 6–8 | Stage 1 labs 4–6 + Stage 2 labs 1–2 | A profile showing a real speedup + a latency-throughput plot |
-| 9–10 | Stage 2 labs 3–6 | A benchmark report with $/1M tokens and an SLO memo |
-| 11–12 | Stage 3 lab 1–2 (rent spot GPUs) | An `nccl-tests` report + a parallelism plan with MFU comparison |
-| 13 | Write it all up | One public blog post with real numbers |
+| 1 | Stage 0 labs 1 to 4, plus one CS336 or GPU MODE lecture | A bytes-and-bandwidth memo with your machine's real numbers |
+| 2 | Stage 1 labs 1 to 3 | A fine-tune with a loss curve, plus a tok/s table at three context lengths |
+| 3 | Stage 1 labs 4 to 6, then Stage 2 labs 1 and 2 | A profile showing a real speedup, plus a latency-throughput plot |
+| 4 | Stage 2 labs 3 to 6 | A benchmark report with $/1M tokens and an SLO memo |
+| 5 | Stage 3 labs 1 and 2, using spot instances if you have no cluster | An `nccl-tests` report and a parallelism plan with an MFU comparison |
+| 6 | Write it all up | One public blog post with real numbers |
 
-That blog post, with real numbers and honest failures, is worth more than any certificate. It's also the artifact that gets you interviews.
+Go at whatever pace you can sustain, and repeat any step that did not stick. The blog post at the end, with real numbers and honest failures, is worth more than any certificate, and it is the artifact that gets you interviews.
 
 ---
 

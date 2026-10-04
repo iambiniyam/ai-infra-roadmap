@@ -1,4 +1,4 @@
-# 🔩 Hardware, Math & Economics
+# Hardware, Math & Economics
 
 Infra people are distinguished by one habit: they can predict the number before running the benchmark. This file gives you the tables and formulas to do that.
 
@@ -12,16 +12,16 @@ Every performance problem is a data-movement problem. These are approximate 2026
 
 | Tier | Capacity | Bandwidth | Latency | What it implies |
 |---|---|---|---|---|
-| Registers | ~256 KB/SM | — | ~1 cycle | Hand-tuned kernels live here |
-| SRAM / L2 | 40–60 MB (L2) | ~10 TB/s | ~200 cycles | FlashAttention's whole trick is keeping tiles here |
-| HBM (GPU) | 80–192 GB | 3.0–8.0 TB/s | ~600 cycles | Bandwidth sets decode speed |
-| NVLink (intra-node) | — | 0.9–1.8 TB/s/GPU | — | The only "fast" place to do tensor parallelism |
-| PCIe Gen5 | — | 64 GB/s (x16) | — | 25x slower than NVLink. Avoid TP over PCIe. |
-| InfiniBand NDR/XDR | — | 50/100 GB/s per port | ~1–2 µs | Inter-node collectives. The real cluster currency. |
-| Ethernet (RoCE 400G) | — | ~50 GB/s | ~2–5 µs | Cheaper fabric; tune it or you'll notice |
-| Local NVMe | 4–30 TB | 3–14 GB/s | ~100 µs | Checkpoint staging |
-| Shared parallel FS | PB scale | 100 GB/s–1 TB/s aggregate | ~ms | Where checkpoints and datasets live |
-| Object store (S3) | ∞ | ~GB/s per client | ~10s of ms | Durable, cheap, never on the hot path |
+| Registers | ~256 KB/SM | n/a | ~1 cycle | Hand-tuned kernels live here |
+| SRAM / L2 | 40-60 MB (L2) | ~10 TB/s | ~200 cycles | FlashAttention's whole trick is keeping tiles here |
+| HBM (GPU) | 80-192 GB | 3.0-8.0 TB/s | ~600 cycles | Bandwidth sets decode speed |
+| NVLink (intra-node) | n/a | 0.9-1.8 TB/s/GPU | n/a | The only "fast" place to do tensor parallelism |
+| PCIe Gen5 | n/a | 64 GB/s (x16) | n/a | 25x slower than NVLink. Avoid TP over PCIe. |
+| InfiniBand NDR/XDR | n/a | 50/100 GB/s per port | ~1-2 µs | Inter-node collectives. The real cluster currency. |
+| Ethernet (RoCE 400G) | n/a | ~50 GB/s | ~2-5 µs | Cheaper fabric; tune it or you'll notice |
+| Local NVMe | 4-30 TB | 3-14 GB/s | ~100 µs | Checkpoint staging |
+| Shared parallel FS | PB scale | 100 GB/s to 1 TB/s aggregate | ~ms | Where checkpoints and datasets live |
+| Object store (S3) | unlimited | ~GB/s per client | ~10s of ms | Durable, cheap, never on the hot path |
 
 **The one ratio to remember:** NVLink (≈900 GB/s) ÷ InfiniBand (≈50 GB/s) ≈ **18x**. That ratio is why tensor parallelism stays inside a node and why pipeline/expert parallelism exist for crossing nodes.
 
@@ -31,19 +31,19 @@ Every performance problem is a data-movement problem. These are approximate 2026
 
 | Chip | Memory | HBM BW | bf16 dense | Notable |
 |---|---|---|---|---|
-| NVIDIA H100 SXM | 80 GB HBM3 | 3.35 TB/s | ~990 TFLOPS | The 2023–2025 workhorse for training and serving |
+| NVIDIA H100 SXM | 80 GB HBM3 | 3.35 TB/s | ~990 TFLOPS | The 2023-2025 workhorse for training and serving |
 | NVIDIA H200 | 141 GB HBM3e | 4.8 TB/s | ~990 TFLOPS | Same compute, way more memory & bandwidth → better for long-context serving |
 | NVIDIA B200 | 192 GB HBM3e | ~8 TB/s | ~2.2 PFLOPS | FP4/FP8 focus; big step on memory bandwidth |
-| NVIDIA GB200 NVL72 | 72 GPUs, 13.5 TB HBM | ~8 TB/s/GPU | — | Rack-scale domain; NVLink across 72 GPUs changes parallelism design |
+| NVIDIA GB200 NVL72 | 72 GPUs, 13.5 TB HBM | ~8 TB/s/GPU | n/a | Rack-scale domain; NVLink across 72 GPUs changes parallelism design |
 | NVIDIA L40S | 48 GB GDDR6 | 0.86 TB/s | ~360 TFLOPS (fp16) | Cheap inference/fine-tuning; weak interconnect |
 | AMD MI300X / MI325X | 192 GB / 256 GB HBM3 | ~5.3 TB/s | ~1.3 PFLOPS | Best $/GB memory for inference-heavy work |
-| Google TPU v5e / v5p | 16 / 95 GB | — | ~200 / ~460 TFLOPS | Cost-efficient at scale if you're XLA-native |
-| Google TPU v6e (Trillium) | 32 GB | — | ~900 TFLOPS | Current-gen TPU, strong perf/$ |
-| AWS Trainium2 | ~96 GB | — | ~FP8-focused | Cheapest $/token for some workloads; op coverage is the catch |
-| AWS Inferentia2 | 32 GB | — | — | Inference-only; good $ for standard models |
+| Google TPU v5e / v5p | 16 / 95 GB | n/a | ~200 / ~460 TFLOPS | Cost-efficient at scale if you're XLA-native |
+| Google TPU v6e (Trillium) | 32 GB | n/a | ~900 TFLOPS | Current-gen TPU, strong perf/$ |
+| AWS Trainium2 | ~96 GB | n/a | ~FP8-focused | Cheapest $/token for some workloads; op coverage is the catch |
+| AWS Inferentia2 | 32 GB | n/a | n/a | Inference-only; good $ for standard models |
 | Intel Gaudi 3 | 128 GB HBM2e | ~3.7 TB/s | ~1.8 PFLOPS (fp8) | Cost play; software maturity is the risk |
-| Huawei Ascend 910B | 64 GB | — | — | Relevant in China; `vllm-ascend` and CANN ecosystem |
-| Apple M-series | Unified | ~0.1–0.5 TB/s | — | MLX/ANE; great local dev, not a cluster |
+| Huawei Ascend 910B | 64 GB | n/a | n/a | Relevant in China; `vllm-ascend` and CANN ecosystem |
+| Apple M-series | Unified | ~0.1-0.5 TB/s | n/a | MLX/ANE; great local dev, not a cluster |
 
 **How to pick:** training at scale → high HBM bandwidth *and* fast interconnect (H100/H200/B200). Serving with long context → HBM capacity and bandwidth (H200, MI300X). Cheap high-volume serving → whatever gives the best $/token *after* accounting for ops cost (L40S, Inferentia, Trainium).
 
@@ -61,7 +61,7 @@ Every performance problem is a data-movement problem. These are approximate 2026
 | FP4 / NVFP4 | 0.5 | Blackwell-era serving; needs calibration |
 | INT8 | 1.0 | Quantized inference; smooth via SmoothQuant-ish methods |
 | INT4 / Q4 | 0.5 | GGUF/AWQ/GPTQ local serving |
-| 1-bit / 1.58-bit | ~0.13–0.2 | Research (BitNet); surprising but check quality |
+| 1-bit / 1.58-bit | ~0.13-0.2 | Research (BitNet); surprising but check quality |
 
 **Rule of thumb:** model size in GB ≈ params × bytes-per-param. A 70B model is ~140 GB in bf16, ~70 GB in fp8, ~35 GB in int4.
 
@@ -75,12 +75,12 @@ Every performance problem is a data-movement problem. These are approximate 2026
 weights              = params × bytes_per_param
 KV cache             = 2 × n_layers × n_kv_heads × head_dim × seq_len × batch × kv_bytes
 activations          = small relative to KV for decode; can be large for prefill of long sequences
-overhead             = CUDA context, workspace, fragmentation  → budget 1–3 GB
+overhead             = CUDA context, workspace, fragmentation  → budget 1-3 GB
 ----------------------------------------------------------------------------
 total ≈ weights + KV cache + overhead + (prefill activations)
 ```
 
-**Worked example — Llama-3-70B (80 layers, 8 KV heads, head_dim 128), bf16:**
+**Worked example: Llama-3-70B (80 layers, 8 KV heads, head_dim 128), bf16:**
 
 | Quantity | Value |
 |---|---|
@@ -99,10 +99,10 @@ total ≈ weights + KV cache + overhead + (prefill activations)
 Mixed-precision Adam (typical) per parameter:
   bf16 weights          2 bytes
   fp32 master weights   4 bytes
-  gradients             2–4 bytes
+  gradients             2-4 bytes
   Adam m + v            8 bytes
   -------------------------------------
-  ≈ 16–20 bytes/parameter   →  a 7B model needs ~112–140 GB before activations
+  ≈ 16-20 bytes/parameter   →  a 7B model needs ~112-140 GB before activations
 
 Plus activations, which scale with batch × sequence × layers × hidden × precision
 (this is what activation checkpointing trades compute for).
@@ -116,7 +116,7 @@ Plus activations, which scale with batch × sequence × layers × hidden × prec
 |---|---|---|---|
 | DDP | nothing | 0 | all-reduce gradients |
 | ZeRO-1 | optimizer states | ~8 bytes/param | all-gather + reduce-scatter |
-| ZeRO-2 | + gradients | +2–4 bytes/param | + reduce-scatter gradients |
+| ZeRO-2 | + gradients | +2-4 bytes/param | + reduce-scatter gradients |
 | ZeRO-3 / FSDP | + parameters | up to full model | + all-gather params per layer |
 
 ---
@@ -132,7 +132,7 @@ C_train ≈ 6 × N × D
 Why 6: 2 (forward) + 4 (backward) multiply-accumulates per param per token.
 ```
 
-**Cost example — train an 8B model on 1T tokens:**
+**Cost example: train an 8B model on 1T tokens:**
 
 ```text
 C = 6 × 8e9 × 1e12 = 4.8e22 FLOPs
@@ -147,7 +147,7 @@ Now vary it: 70% MFU instead of 40% → ~$48k. **MFU is a money number.**
 
 ```text
 Prefill (compute-bound):  ≈ 2 × N × tokens_in   + attention term
-Decode  (memory-bound):   ≈ 2 × N per token     ← but you're waiting on HBM, not FLOPs
+Decode  (memory-bound):   ≈ 2 × N per token     <- but you're waiting on HBM, not FLOPs
 ```
 
 ### 5.3 The decode bandwidth limit (the single best back-of-envelope in serving)
@@ -156,7 +156,7 @@ Decode  (memory-bound):   ≈ 2 × N per token     ← but you're waiting on HBM
 tokens/sec (batch 1) ≤ HBM_bandwidth / weights_bytes
 
 H100: 3.35 TB/s ÷ 16 GB (8B model, bf16) ≈ 209 tok/s theoretical ceiling
-                                  ↘ realistic single-stream: 60–120 tok/s
+                                  -> realistic single-stream: 60-120 tok/s
 ```
 
 This is why quantization speeds up decode almost linearly with size reduction, and why batching is the only way to use a GPU's FLOPs efficiently: with batch 32, the same weight read serves 32 tokens.
@@ -176,7 +176,7 @@ H100 crossover: 990e12 / 3.35e12 ≈ 295 FLOP/byte
 
 | Workload | Intensity | Bound by |
 |---|---|---|
-| Decode, batch 1 | ~1–2 FLOP/byte | HBM bandwidth |
+| Decode, batch 1 | ~1-2 FLOP/byte | HBM bandwidth |
 | Large GEMM | hundreds | Compute |
 | Flash attention (fused) | moderate | SRAM bandwidth + compute balance |
 | Elementwise ops | << 1 | Bandwidth (fusion is the fix) |
@@ -194,9 +194,9 @@ All-reduce bytes per rank ≈ 2 × (N-1)/N × S      (S = payload size, N = rank
 Consequences:
 
 - **Data parallel** cost grows with model size (you all-reduce gradients) and is cheap per-step but scales badly past a point.
-- **Tensor parallel** requires an all-reduce *per layer* — only viable at NVLink speeds, i.e. inside a node.
+- **Tensor parallel** requires an all-reduce *per layer*, which is only viable at NVLink speeds, i.e. inside a node.
 - **Pipeline parallel** trades idle "bubbles" for less communication; needs enough micro-batches to fill the pipeline.
-- **Expert parallel (MoE)** needs all-to-all — the most demanding pattern; it changes your fabric requirements.
+- **Expert parallel (MoE)** needs all-to-all, the most demanding pattern; it changes your fabric requirements.
 
 **Amdahl's law is the reason for "minimum parallelism that fits":** every added axis adds communication overhead somewhere, so scaling efficiency decays. Measure it (`nccl-tests`, MFU at 1 vs 8 vs 64 GPUs) rather than assuming it.
 
@@ -208,12 +208,12 @@ Consequences:
 
 | Component | Typical |
 |---|---|
-| GPUs | 8× H100/H200/B200 with NVSwitch (900 GB/s–1.8 TB/s each) |
+| GPUs | 8× H100/H200/B200 with NVSwitch (900 GB/s to 1.8 TB/s each) |
 | CPUs | 2× 64-core (Grace/EPYC/Xeon) |
-| RAM | 1–2 TB |
+| RAM | 1-2 TB |
 | NICs | 8× 400G IB (one per GPU, GPUDirect RDMA) |
-| Local NVMe | 4–30 TB |
-| Power | ~5.6 kW GPUs + 1.5 kW rest ≈ 7–10 kW/node |
+| Local NVMe | 4-30 TB |
+| Power | ~5.6 kW GPUs + 1.5 kW rest ≈ 7-10 kW/node |
 
 ### Sizing rules
 
@@ -222,8 +222,8 @@ Consequences:
 | Fabric | Non-blocking or rail-optimized for training; some oversubscription is OK for inference |
 | Checkpoint storage | Must write your full checkpoint in < 2 minutes; otherwise recovery dominates |
 | Dataset throughput | ≥ 1 GB/s per GPU sustained, or the GPUs starve |
-| Power | 8×H100 nodes → liquid cooling at rack density; plan for 40–80 kW/rack |
-| Failure domains | Assume a GPU failure every few hours at 1,000+ GPUs — design for restart |
+| Power | 8×H100 nodes → liquid cooling at rack density; plan for 40-80 kW/rack |
+| Failure domains | Assume a GPU failure every few hours at 1,000+ GPUs; design for restart |
 
 ### Failure arithmetic
 
@@ -261,13 +261,13 @@ Now vary each lever and re-price: fp8 KV cache (+memory → +batch → +throughp
 
 | Factor | Favors renting | Favors owning |
 |---|---|---|
-| Utilization | sporadic, < 40% | sustained, > 60–70% |
+| Utilization | sporadic, < 40% | sustained, > 60-70% |
 | Ops capacity | small team | dedicated platform team |
 | Hardware generation risk | high (churn) | low (stable workload) |
 | Data/compliance | cloud-friendly | must stay on-prem |
 | Burst capacity | needed | predictable |
 
-Break-even is usually **2–4x** in favor of ownership at high utilization — but only if you can staff the platform. Count the humans.
+Break-even is usually **2-4x** in favor of ownership at high utilization, but only if you can staff the platform. Count the humans.
 
 ---
 
@@ -284,9 +284,9 @@ Break-even is usually **2–4x** in favor of ownership at high utilization — b
 | InfiniBand NDR per port | ~50 GB/s |
 | H100 FP16/BF16 roofline crossover | ~295 FLOP/byte |
 | Chinchilla compute-optimal tokens | ~20 × params |
-| Practical tokens/param today | 100–1,000+ (way past Chinchilla) |
-| Good MFU for large training | 40–55% |
-| Good GPU utilization for serving | 30–70% (idle headroom is a feature) |
+| Practical tokens/param today | 100-1,000+ (way past Chinchilla) |
+| Good MFU for large training | 40-55% |
+| Good GPU utilization for serving | 30-70% (idle headroom is a feature) |
 
 ---
 
@@ -294,13 +294,13 @@ Break-even is usually **2–4x** in favor of ownership at high utilization — b
 
 Before you buy or reserve anything, write down:
 
-- [ ] **Workload mix** — training vs fine-tuning vs serving, and the ratio
-- [ ] **Memory requirement** — largest model, context length, and concurrency
-- [ ] **Interconnect requirement** — parallelism plan implies a fabric
-- [ ] **Storage requirement** — dataset size, checkpoint size × frequency, bandwidth
-- [ ] **Power and cooling** — kW/rack, and whether the building can take it
-- [ ] **Utilization forecast** — honest, per quarter, with the idle cost priced in
-- [ ] **Ops capacity** — who runs it at 3 a.m.?
-- [ ] **Exit plan** — portability (vLLM/K8s/ONNX) so you're never locked in
+- [ ] **Workload mix**: training vs fine-tuning vs serving, and the ratio
+- [ ] **Memory requirement**: largest model, context length, and concurrency
+- [ ] **Interconnect requirement**: parallelism plan implies a fabric
+- [ ] **Storage requirement**: dataset size, checkpoint size × frequency, bandwidth
+- [ ] **Power and cooling**: kW/rack, and whether the building can take it
+- [ ] **Utilization forecast**: honest, per quarter, with the idle cost priced in
+- [ ] **Ops capacity**: who runs it at 3 a.m.?
+- [ ] **Exit plan**: portability (vLLM/K8s/ONNX) so you're never locked in
 
 **Next:** [cheatsheets/inference-math.md](cheatsheets/inference-math.md) for the serving formulas, [cheatsheets/training-parallelism.md](cheatsheets/training-parallelism.md) for the parallelism decision table.

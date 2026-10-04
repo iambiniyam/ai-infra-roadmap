@@ -1,6 +1,6 @@
-# 🛠 Projects
+# Projects
 
-Fifteen-plus buildable projects, ordered by difficulty. Each one maps to a stage in [ROADMAP.md](ROADMAP.md) and ends with **acceptance criteria** — if you can't check every box, the project isn't done.
+Seventeen buildable projects, ordered by difficulty. Each one maps to a stage in [ROADMAP.md](ROADMAP.md) and ends with **acceptance criteria**: if you can't check every box, the project isn't done.
 
 > **Rules of the game:** every project ends in a *number* and a *public artifact* (repo, README, plot, or blog post). Numbers because infra is empirical. Public because that's what actually gets you hired.
 
@@ -10,16 +10,16 @@ Fifteen-plus buildable projects, ordered by difficulty. Each one maps to a stage
 
 1. Pick a project at your current stage.
 2. Read the deliverables *before* starting so you know what "done" means.
-3. Timebox it: struggle for an hour before searching, and stop when the acceptance criteria are met.
+3. Struggle first, then search. Stop when the acceptance criteria are met, not when the code looks nice.
 4. Write a one-page README with methodology, results, and what surprised you.
 
 ---
 
-## 🟢 Stage 1 · Foundations of one GPU
+## Stage 1 · Foundations of one GPU
 
 ### P1 · GPU Report Card
 
-**Time:** 1 weekend · **Skills:** Stage 0–1
+**Skills:** Stage 0-1
 
 **Build a reproducible benchmark that characterizes the machine you have.**
 
@@ -42,7 +42,7 @@ Deliverables:
 
 ### P2 · Rebuild a GPT, Reproducibly
 
-**Time:** 1–2 weeks · **Skills:** Stage 1
+**Skills:** Stage 1
 
 **Train a small GPT from scratch and make the run reproducible.**
 
@@ -51,7 +51,7 @@ Use [nanoGPT](https://github.com/karpathy/nanoGPT) or write ~500 lines yourself.
 Deliverables:
 
 - Config-driven training (`config.yaml`), seeded, logged (MLflow or W&B-free alternative like [Aim](https://github.com/aimhubio/aim)).
-- Loss curves for 2–3 hyperparameter variants.
+- Loss curves for 2-3 hyperparameter variants.
 - A **tokens/sec + MFU** measurement in the README.
 - A sample of generated text before/after training.
 
@@ -68,11 +68,11 @@ Deliverables:
 
 ### P3 · Fine-Tune with an Eval Gate
 
-**Time:** 1 week · **Skills:** Stage 1
+**Skills:** Stage 1
 
-**Fine-tune a 7B model on a real task and prove it got better — or admit it didn't.**
+**Fine-tune a 7B model on a real task and prove it got better, or admit it didn't.**
 
-Use [Unsloth](https://github.com/unslothai/unsloth) or [LlamaFactory](https://github.com/hiyouga/LlamaFactory) with QLoRA. Build a 50–200 example eval set *first*.
+Use [Unsloth](https://github.com/unslothai/unsloth) or [LlamaFactory](https://github.com/hiyouga/LlamaFactory) with QLoRA. Build a 50-200 example eval set *first*.
 
 Deliverables:
 
@@ -93,7 +93,7 @@ Deliverables:
 
 ### P4 · Local Inference Lab
 
-**Time:** 2–3 days · **Skills:** Stage 1
+**Skills:** Stage 1
 
 **Serve a model locally and characterize the context-length cliff.**
 
@@ -117,7 +117,7 @@ Deliverables:
 
 ### P5 · Kernel Autopsy
 
-**Time:** 1 week · **Skills:** Stage 1–2
+**Skills:** Stage 1-2
 
 **Profile a real training or inference step and make it measurably faster.**
 
@@ -137,15 +137,15 @@ Deliverables:
 
 ---
 
-## 🔵 Stage 2 · Multi-GPU & serving
+## Stage 2 · Multi-GPU & serving
 
-### P6 · Latency–Throughput Lab
+### P6 · Latency-Throughput Lab
 
-**Time:** 1–2 weeks · **Skills:** Stage 2
+**Skills:** Stage 2
 
-**Produce the canonical serving artifact: a latency–throughput curve.**
+**Produce the canonical serving artifact: a latency-throughput curve.**
 
-Serve a 7B–13B model on [vLLM](https://github.com/vllm-project/vllm). Sweep concurrency 1 → 512 with a fixed prompt distribution.
+Serve a 7B-13B model on [vLLM](https://github.com/vllm-project/vllm). Sweep concurrency 1 → 512 with a fixed prompt distribution.
 
 Deliverables:
 
@@ -166,7 +166,7 @@ Deliverables:
 
 ### P7 · Cost-per-Token Optimizer
 
-**Time:** 1 week · **Skills:** Stage 2
+**Skills:** Stage 2
 
 **Cut $/1M tokens without violating an SLO.**
 
@@ -190,7 +190,7 @@ Deliverables:
 
 ### P8 · Multi-LoRA Serving
 
-**Time:** 1 week · **Skills:** Stage 2
+**Skills:** Stage 2
 
 **Serve five adapters on one base model and measure the economics.**
 
@@ -212,7 +212,7 @@ Deliverables:
 
 ### P9 · DDP → FSDP Scaling Study
 
-**Time:** 1 week · **Skills:** Stage 2
+**Skills:** Stage 2
 
 **Measure scaling efficiency and explain it with the fabric.**
 
@@ -232,11 +232,11 @@ Deliverables:
 
 ---
 
-## 🟣 Stage 3 · Multi-node
+## Stage 3 · Multi-node
 
 ### P10 · Fabric Report
 
-**Time:** 3–5 days · **Skills:** Stage 3
+**Skills:** Stage 3
 
 **Characterize the network your training depends on.**
 
@@ -260,7 +260,7 @@ Deliverables:
 
 ### P11 · Fault-Injection Drill
 
-**Time:** 1–2 weeks · **Skills:** Stage 3
+**Skills:** Stage 3
 
 **Break a multi-node job on purpose and recover it.**
 
@@ -283,7 +283,7 @@ Deliverables:
 
 ### P12 · Disaggregated Inference
 
-**Time:** 2 weeks · **Skills:** Stage 3
+**Skills:** Stage 3
 
 **Deploy prefill/decode separation and find where it *hurts*.**
 
@@ -305,11 +305,11 @@ Deliverables:
 
 ---
 
-## 🟠 Stage 4 · Platform
+## Stage 4 · Platform
 
 ### P13 · Mini GPU Platform
 
-**Time:** 3–6 weeks · **Skills:** Stage 4
+**Skills:** Stage 4
 
 **Stand up a shared GPU platform with quotas, telemetry, and isolation.**
 
@@ -334,7 +334,7 @@ Deliverables:
 
 ### P14 · FinOps Dashboard That Changes a Decision
 
-**Time:** 1 week · **Skills:** Stage 4
+**Skills:** Stage 4
 
 **Make cost visible, then act on it.**
 
@@ -356,7 +356,7 @@ Deliverables:
 
 ### P15 · Eval + Red-Team Pipeline in CI
 
-**Time:** 2 weeks · **Skills:** Stage 4–5
+**Skills:** Stage 4-5
 
 **Make quality and safety a gate, not a hope.**
 
@@ -376,11 +376,11 @@ Deliverables:
 
 ---
 
-## 🔴 Stage 5 · Frontier
+## Stage 5 · Frontier
 
 ### P16 · Write a Triton Kernel
 
-**Time:** 2–4 weeks · **Skills:** Stage 5
+**Skills:** Stage 5
 
 **Beat the PyTorch baseline on a real op in your workload.**
 
@@ -402,7 +402,7 @@ Deliverables:
 
 ### P17 · Reproduce a Paper
 
-**Time:** 3–6 weeks · **Skills:** Stage 5
+**Skills:** Stage 5
 
 **Pick a systems/ML-systems paper and reproduce its headline claim.**
 

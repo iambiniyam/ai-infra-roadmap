@@ -1,4 +1,4 @@
-# 🧮 Training & Parallelism Cheatsheet
+# Training & Parallelism Cheatsheet
 
 How to fit a model, how to shard it, and how to debug it when it hangs.
 
@@ -10,20 +10,20 @@ How to fit a model, how to shard it, and how to debug it when it hangs.
 Mixed-precision Adam, per parameter:
   bf16 weights        2 B
   fp32 master         4 B
-  gradients           2–4 B
+  gradients           2-4 B
   Adam m, v           8 B
   ----------------------------------
-  ≈ 16–20 B/param   (before activations)
+  ≈ 16-20 B/param   (before activations)
 
-Full 7B  → ~112–140 GB     Full 70B → ~1.1–1.4 TB
+Full 7B  → ~112-140 GB     Full 70B → ~1.1-1.4 TB
 ```
 
 | Strategy | 7B on 8×80 GB | Notes |
 |---|---|---|
-| DDP (replicated) | ✗ | 140 GB of state per GPU |
-| ZeRO-1 | ✓ | Shards optimizer states |
-| ZeRO-2 | ✓✓ | + gradients |
-| ZeRO-3 / FSDP | ✓✓✓ | + parameters; slowest comms |
+| DDP (replicated) | No | 140 GB of state per GPU |
+| ZeRO-1 | Yes | Shards optimizer states |
+| ZeRO-2 | Yes | Also shards gradients |
+| ZeRO-3 / FSDP | Yes, best fit | Also shards parameters; slowest comms |
 
 **Also add activations** (scales with batch × seq × layers × hidden). Activation checkpointing trades ~30% compute for large memory savings.
 
@@ -61,10 +61,10 @@ Full 7B  → ~112–140 GB     Full 70B → ~1.1–1.4 TB
 All-reduce bytes per rank ≈ 2 × (N−1)/N × S      (S = payload)
 
 Consequences:
-  • Larger messages → bandwidth-bound (good, efficient)
-  • Small messages  → latency-bound (bad, overhead dominates)
-  • TP does an all-reduce per layer → wants NVLink
-  • MoE all-to-all is the most demanding pattern
+  - Larger messages → bandwidth-bound (good, efficient)
+  - Small messages  → latency-bound (bad, overhead dominates)
+  - TP does an all-reduce per layer → wants NVLink
+  - MoE all-to-all is the most demanding pattern
 ```
 
 **Scaling efficiency** = (tokens/s at N GPUs) ÷ (N × tokens/s at 1 GPU). Report it; don't assume it.
@@ -77,7 +77,7 @@ Consequences:
 |---|---|
 | Global batch size | micro-batch × grad-accum × DP size |
 | LR | Scale sub-linearly with global batch; add warmup |
-| Warmup | ~0.1–1% of total steps for large runs |
+| Warmup | ~0.1-1% of total steps for large runs |
 | Grad accumulation | Memory lever; keep the *global* batch constant when you change it |
 | Sequence length | Quadratic attention cost; budget it |
 | Weight decay | ~0.1 typical; skip on norms/biases |
@@ -145,10 +145,10 @@ srun --kill-on-bad-exit=1 torchrun \
 
 | Step | Check |
 |---|---|
-| 1 | `nvidia-smi` on every node — are all GPUs visible and healthy? |
-| 2 | `NCCL_DEBUG=INFO` — is it picking IB or falling back to sockets? |
-| 3 | `nccl-tests all_reduce_perf` — does the fabric perform as expected? |
-| 4 | Fix the seed and re-run with 1 GPU — does it work at all? |
+| 1 | `nvidia-smi` on every node: are all GPUs visible and healthy? |
+| 2 | `NCCL_DEBUG=INFO`: is it picking IB or falling back to sockets? |
+| 3 | `nccl-tests all_reduce_perf`: does the fabric perform as expected? |
+| 4 | Fix the seed and re-run with 1 GPU: does it work at all? |
 | 5 | Scale 1 → 2 → 8 GPUs, watching MFU at each step |
 | 6 | Enable the NCCL flight recorder / `TORCH_NCCL_TRACE_BUFFER_SIZE` to catch hangs |
 | 7 | Check for a straggler: per-rank step times, not just the mean |

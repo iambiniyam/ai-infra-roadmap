@@ -1,6 +1,6 @@
-# 📚 Resources
+# Resources
 
-Everything here is **free to access** unless explicitly marked *(paid)*. Ordered by how much you get per hour invested.
+Everything here is **free to access** unless explicitly marked *(paid)*. Ordered by how much value you get from each.
 
 ---
 
@@ -8,21 +8,21 @@ Everything here is **free to access** unless explicitly marked *(paid)*. Ordered
 
 | Course | Provider | Best for | Why it's here |
 |---|---|---|---|
-| [**CS336 — Language Modeling from Scratch**](https://stanford-cs336.github.io/) | Stanford | Stages 1–3 | The single best end-to-end LLM-systems course. Builds tokenizer → transformer → training → inference → scaling. Lectures on YouTube. |
-| [**Deep Learning Systems**](https://dlsyscourse.org/) | CMU 10-414/714 | Stage 1–2 | Builds autograd, a compiler, and a runtime from scratch. Explains PyTorch. |
-| [**Efficient Deep Learning Systems**](https://github.com/mryab/efficient-dl-systems) | Yandex/HSE | Stages 1–3 | Free materials on quantization, distributed training, and inference. Systems-first. |
+| [**CS336: Language Modeling from Scratch**](https://stanford-cs336.github.io/) | Stanford | Stages 1-3 | The single best end-to-end LLM-systems course. Builds tokenizer → transformer → training → inference → scaling. Lectures on YouTube. |
+| [**Deep Learning Systems**](https://dlsyscourse.org/) | CMU 10-414/714 | Stage 1-2 | Builds autograd, a compiler, and a runtime from scratch. Explains PyTorch. |
+| [**Efficient Deep Learning Systems**](https://github.com/mryab/efficient-dl-systems) | Yandex/HSE | Stages 1-3 | Free materials on quantization, distributed training, and inference. Systems-first. |
 | [**TinyML & Efficient Deep Learning**](https://hanlab.mit.edu/courses/2023-fall-65940) | MIT 6.5940 | Stage 5 | Pruning, quantization, NAS, efficient inference. |
 | [**Parallel Computing (CS267)**](https://sites.google.com/lbl.gov/cs267-spr2023) | Berkeley | Stage 3 | The MPI/collective/topology foundation under NCCL. |
 | [**Parallel Computer Architecture (15-418/618)**](https://www.cs.cmu.edu/~418/) | CMU | Stage 5 | Why GPUs are shaped the way they are. |
-| [**Distributed Systems (6.5840/6.824)**](https://pdos.csail.mit.edu/6.824/) | MIT | Stage 4 | Consensus, replication, fault tolerance — you will need all three. |
+| [**Distributed Systems (6.5840/6.824)**](https://pdos.csail.mit.edu/6.824/) | MIT | Stage 4 | Consensus, replication, and fault tolerance. You will need all three. |
 | [**Database Systems (15-445)**](https://15445.courses.cs.cmu.edu/) | CMU | Stage 4 | Storage/indexing/query execution. Explains why your data layer is slow. |
-| [**GPU MODE lectures**](https://github.com/gpu-mode/lectures) | Community | Stages 1–5 | CUDA, Triton, and kernel optimization from practitioners. Also a Discord. |
-| [**Hugging Face LLM Course**](https://huggingface.co/learn/llm-course) | Hugging Face | Stage 1 | Transformers, datasets, fine-tuning, evaluation — practical and current. |
+| [**GPU MODE lectures**](https://github.com/gpu-mode/lectures) | Community | Stages 1-5 | CUDA, Triton, and kernel optimization from practitioners. Also a Discord. |
+| [**Hugging Face LLM Course**](https://huggingface.co/learn/llm-course) | Hugging Face | Stage 1 | Transformers, datasets, fine-tuning, and evaluation. Practical and current. |
 | [**Full Stack Deep Learning**](https://fullstackdeeplearning.com/course/) | FSDL | Stage 4 | The product/ops side of shipping ML. |
 | [**MLOps Zoomcamp**](https://github.com/DataTalksClub/mlops-zoomcamp) | DataTalks.Club | Stage 4 | Free 9-week MLOps course with a real project. |
-| [**Data Engineering Zoomcamp**](https://github.com/DataTalksClub/data-engineering-zoomcamp) | DataTalks.Club | Stage 4 | Pipelines, warehouses, orchestration — the L4 foundation. |
+| [**Data Engineering Zoomcamp**](https://github.com/DataTalksClub/data-engineering-zoomcamp) | DataTalks.Club | Stage 4 | Pipelines, warehouses, and orchestration: the L4 foundation. |
 | [**MIT Missing Semester**](https://missing.csail.mit.edu/) | MIT | Stage 0 | Shell, git, debugging. Do this before anything else. |
-| [**Performance Engineering (6.172)**](https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/) | MIT OCW | Stage 0/5 | Caches, profiling, parallelism — durable fundamentals. |
+| [**Performance Engineering (6.172)**](https://ocw.mit.edu/courses/6-172-performance-engineering-of-software-systems-fall-2018/) | MIT OCW | Stage 0/5 | Caches, profiling, and parallelism: the durable fundamentals. |
 | [**Made With ML**](https://github.com/GokuMohandas/Made-With-ML) | Goku Mohandas | Stage 4 | Design → develop → deploy → iterate, end to end. |
 | [**Fast.ai**](https://course.fast.ai/) | fast.ai | Stage 1 | Top-down practical deep learning. |
 
@@ -41,24 +41,24 @@ Everything here is **free to access** unless explicitly marked *(paid)*. Ordered
 | [**Reinforcement Learning: An Introduction**](http://incompleteideas.net/book/the-book-2nd.html) (Sutton & Barto) | Needed for RLHF/RLVR |
 | [**The Datacenter as a Computer**](https://research.google/pubs/the-datacenter-as-a-computer-an-introduction-to-the-design-of-warehouse-scale-machines/) | Warehouse-scale thinking |
 | [**Google SRE Book**](https://sre.google/books/) | SLOs, error budgets, incidents |
-| [**ML Engineering Open Book**](https://github.com/stas00/ml-engineering) | Hardware, debugging, SLURM — the practical companion to Stages 1–4 |
+| [**ML Engineering Open Book**](https://github.com/stas00/ml-engineering) | Hardware, debugging, and SLURM: the practical companion to Stages 1-4 |
 
 **Paid, and worth it**
 
 | Book | Why |
 |---|---|
-| *Designing Machine Learning Systems* — Chip Huyen | The lifecycle, from a practitioner who's shipped it |
-| *AI Engineering* — Chip Huyen | The 2025+ successor; evaluation and product reality |
-| *Programming Massively Parallel Processors* — Kirk & Hwu | The CUDA textbook |
-| *Computer Architecture: A Quantitative Approach* — Hennessy & Patterson | Where the bandwidth numbers come from |
-| *Systems Performance* — Brendan Gregg | The USE method; read it once, use it forever |
-| *High Performance Python* — Gorelick & Ozsvald | The Python-side performance work |
+| *Designing Machine Learning Systems* by Chip Huyen | The lifecycle, from a practitioner who's shipped it |
+| *AI Engineering* by Chip Huyen | The 2025+ successor; evaluation and product reality |
+| *Programming Massively Parallel Processors* by Kirk & Hwu | The CUDA textbook |
+| *Computer Architecture: A Quantitative Approach* by Hennessy & Patterson | Where the bandwidth numbers come from |
+| *Systems Performance* by Brendan Gregg | The USE method; read it once, use it forever |
+| *High Performance Python* by Gorelick & Ozsvald | The Python-side performance work |
 
 ---
 
 ## Papers
 
-Read in this order. You don't need every paper to start — but you should be able to *summarize* every paper below.
+Read in this order. You don't need every paper to start, but you should be able to *summarize* every paper below.
 
 ### Foundations
 
@@ -181,7 +181,7 @@ Read in this order. You don't need every paper to start — but you should be ab
 | [Chatbot Arena-style human evals](https://lmarena.ai/) | Subjective preference | Sanity-check eval suites |
 | [Terminal-Bench](https://github.com/laude-institute/terminal-bench) | Agent terminal tasks | Evaluate agent scaffolds, not just models |
 
-**A warning about leaderboards:** they measure *the benchmark*, not your workload. Contamination, prompt sensitivity, and version drift are real. Always hold out your own eval set — see [P3](PROJECTS.md#p3--fine-tune-with-an-eval-gate) and [P15](PROJECTS.md#p15--eval--red-team-pipeline-in-ci).
+**A warning about leaderboards:** they measure *the benchmark*, not your workload. Contamination, prompt sensitivity, and version drift are real. Always hold out your own eval set; see [P3](PROJECTS.md#p3--fine-tune-with-an-eval-gate) and [P15](PROJECTS.md#p15--eval--red-team-pipeline-in-ci).
 
 ---
 
