@@ -33,7 +33,7 @@ It gives you:
 
 > **What this is not:** a list of every AI repo on Earth. Curation means exclusion. If a tool is here, it earned its place for a learner or a practitioner. Star counts in tables are refreshed weekly by a bot (see [`scripts/refresh_stars.py`](scripts/refresh_stars.py)), so you can trust them as a rough signal of health, not as a substitute for reading the docs.
 
-**Last full data refresh:** 2026-10-04.
+**Last full data refresh:** 2026-10-05.
 
 ---
 
@@ -183,10 +183,10 @@ This repo complements the giants below. None of them is a substitute for the oth
 
 | Resource | Stars | Best for | Overlap with this repo |
 |---|---:|---|---|
-| [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19.1k | Deep, practical ML-engineering book (hardware, debugging, SLURM, reduction) | **Read it** alongside Stages 1-4. More depth, less ordering. |
+| [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19.2k | Deep, practical ML-engineering book (hardware, debugging, SLURM, reduction) | **Read it** alongside Stages 1-4. More depth, less ordering. |
 | [HuaizhengZhang/AI-Infra-from-Zero-to-Hero](https://github.com/HuaizhengZhang/AI-Infra-from-Zero-to-Hero) | 4.4k | Paper + industry-practice reading list per topic | The paper layer of [RESOURCES.md](RESOURCES.md), expanded |
-| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 5.8k | Quantitative derivation of LLM inference/training system design | The math in [HARDWARE.md](HARDWARE.md), taken much further |
-| [modular/llm-inference-handbook](https://github.com/modular/llm-inference-handbook) | 0.4k | Concise inference fundamentals | A good Stage 2 companion |
+| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 5.9k | Quantitative derivation of LLM inference/training system design | The math in [HARDWARE.md](HARDWARE.md), taken much further |
+| [modular/llm-inference-handbook](https://github.com/modular/llm-inference-handbook) | 0.5k | Concise inference fundamentals | A good Stage 2 companion |
 | [ai-infra-curriculum/ai-infra-engineer-learning](https://github.com/ai-infra-curriculum/ai-infra-engineer-learning) | 1.8k | Structured curriculum for working infra engineers | Similar goal, less tooling/stack detail |
 | [deepseek-ai/open-infra-index](https://github.com/deepseek-ai/open-infra-index) | 8.1k | Production-tested infra tool index from a frontier lab | A second opinion on [STACK.md](STACK.md) |
 | [liguodongiot/llm-action](https://github.com/liguodongiot/llm-action) | 25.1k | Huge practical LLM-engineering guide (zh/en) | Broad; useful reference, not a path |
