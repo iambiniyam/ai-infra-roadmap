@@ -8,6 +8,7 @@ Everything here is **free to access** unless explicitly marked *(paid)*. Ordered
 
 | Course | Provider | Best for | Why it's here |
 |---|---|---|---|
+| [**Machine Learning Systems (CS249r)**](https://mlsysbook.ai/) | Harvard (MIT Press 2026) | Stages 0-5 | **A two-volume open-access textbook, and the broadest free curriculum here.** Vol I Foundations, Vol II At Scale, plus TinyTorch (build a framework), MLSys·im (first-principles performance modeling CLI), interactive labs, and hardware kits. CC-BY-NC-SA. Start here if you want a course rather than a roadmap |
 | [**CS336: Language Modeling from Scratch**](https://stanford-cs336.github.io/) | Stanford | Stages 1-3 | The single best end-to-end LLM-systems course. Builds tokenizer → transformer → training → inference → scaling. Lectures on YouTube. |
 | [**Deep Learning Systems**](https://dlsyscourse.org/) | CMU 10-414/714 | Stage 1-2 | Builds autograd, a compiler, and a runtime from scratch. Explains PyTorch. |
 | [**Efficient Deep Learning Systems**](https://github.com/mryab/efficient-dl-systems) | Yandex/HSE | Stages 1-3 | Free materials on quantization, distributed training, and inference. Systems-first. |
@@ -42,6 +43,7 @@ Everything here is **free to access** unless explicitly marked *(paid)*. Ordered
 | [**The Datacenter as a Computer**](https://research.google/pubs/the-datacenter-as-a-computer-an-introduction-to-the-design-of-warehouse-scale-machines/) | Warehouse-scale thinking |
 | [**Google SRE Book**](https://sre.google/books/) | SLOs, error budgets, incidents |
 | [**ML Engineering Open Book**](https://github.com/stas00/ml-engineering) | Hardware, debugging, and SLURM: the practical companion to Stages 1-4 |
+| [**AI Infra in Depth**](https://github.com/bojieli/ai-infra-book) (《深入理解 AI Infra》, Bojie Li) | **The closest thing to a textbook for this repo's math.** Derives LLM inference and training system design from hardware constraints, quantitatively. 12 chapters from model architecture through accelerators, kernels, supernodes, datacenter networking and edge-cloud. Ships a calculation CLI, worked case studies, and 100+ experiments with negative results kept honest. Chinese original with community English, Traditional Chinese, and Russian editions. Read it when [HARDWARE.md](HARDWARE.md) leaves you wanting the full derivation. |
 
 **Paid, and worth it**
 

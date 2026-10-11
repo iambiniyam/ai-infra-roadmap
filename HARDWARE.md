@@ -15,6 +15,69 @@ Infra people are distinguished by one habit: they can predict the number before 
 
 ---
 
+## 0. The five questions (start here, every time)
+
+Before any formula, ask these five questions about the data. Every performance problem in this repo is a data-movement problem, and this framework finds the movement you forgot:
+
+> **1. What must move?** Weights, activations, KV cache, gradients, optimizer state, expert routing, a checkpoint, a file.
+> **2. How much?** Multiply the bytes. A 70B model in bf16 is 140 GB *per read*, not per run.
+> **3. How many times?** Once per token? Once per layer? Once per step? Once per request? This is where the orders of magnitude hide.
+> **4. Through which interface?** HBM, NVLink, PCIe, IB, Ethernet, object store. Each has a bandwidth and a latency.
+> **5. Who must wait for it?** If the answer is "everyone," it is on the critical path and nothing else matters until it is fixed.
+
+**Why this order matters.** The most common estimation error is answering question 1 and 2 correctly, then forgetting question 5. Concretely:
+
+| Symptom | The forgotten question |
+|---|---|
+| "Decode should run at 200 tok/s" but it runs at 60 | **How many times:** you counted the weight read once instead of once *per token*, and you ignored the KV read that grows with context (at 32k, KV is ~20% of the traffic and rising). The rest of the gap is that 3.35 TB/s is peak, not achievable |
+| "This kernel is 3x off the roofline" | **Which interface:** you compared against peak HBM but the data comes from L2 (or worse, sysmem) |
+| "Tensor parallel gave no speedup" | **Who waits:** the all-reduce is serial and on the critical path; the compute got faster but the step did not |
+| "We added GPUs and throughput barely moved" | **Who waits:** the bottleneck was never compute — it was a serial stage (data loading, a single-threaded serving loop, a lock) |
+| "Quantization should have doubled decode speed" | **How much / which interface:** you shrank the weights, but at long context the KV cache now dominates the read, so the win is smaller than the weight ratio |
+
+**The discipline:** write all five answers down *before* touching a profiler, with units. Then compare against the hierarchy in Section 1. If your plan requires more bandwidth than an interface has, the plan is impossible — that is a five-minute answer to a question people often spend a week benchmarking.
+
+**The corollary:** optimization equals reducing `bytes × times`, or moving the traffic to a faster interface, or removing it from the critical path. Every technique in this repo — fusion, quantization, caching, sharding, prefetching, disaggregation, recomputation — is one of those three moves in disguise.
+
+### The Iron Law (the same idea as one equation)
+
+Every unit of work in an ML system takes time that decomposes into exactly three terms:
+
+```text
+T = D/BW  +  O/(R·η)  +  L
+    ↑          ↑          ↑
+  memory     compute    orchestration
+  (bytes ÷   (ops ÷     (launch, sync,
+  bandwidth) peak×eff)  handoff, queue)
+```
+
+- **D** = bytes that must move, **BW** = bandwidth of the interface they cross
+- **O** = operations required, **R** = peak rate, **η** = achieved efficiency (the honest term; η ≤ 1, and 0.5 is a *good* day)
+- **L** = the fixed costs that no amount of parallelism removes: kernel launches, synchronization, queueing, handoffs
+
+**Why it is worth internalizing:** it tells you which term to attack before you profile, and it explains why some optimizations are guaranteed to disappoint. Worked on a 70B model decoding at batch 1 on an H100 (bf16, 140 GB of weights, η = 0.5):
+
+| Term | Value | Share |
+|---|---:|---:|
+| Memory `D/BW` | 41.8 ms | 99.3% |
+| Compute `O/(R·η)` | 0.28 ms | 0.7% |
+| Orchestration `L` | ~0.02 ms | ~0% |
+| **Total** | **42.1 ms** | 23.8 tok/s |
+
+The memory term beats the compute term by **~148x**. No amount of compute optimization will help; only moving fewer bytes (quantization, smaller KV) or crossing a faster interface will. That is the roofline argument, delivered as arithmetic rather than a chart.
+
+**The three corollaries you will actually use:**
+
+1. **At batch 1, `D/BW` usually dominates** — so decode optimization is a *bytes* problem. At large batch, `O/(R·η)` takes over and it becomes a compute problem. Find where your workload sits.
+2. **η is where the engineering is.** Peak is unobtainable; the gap between your achieved efficiency and ~0.6-0.7 is the entire optimization surface, and it lives in the orchestration and memory terms, not the peak number.
+3. **`L` is why small optimizations vanish.** If a launch or handoff costs 20 µs and your kernel saves 5 µs, you shipped nothing. This is the quantitative reason batching, fusion, and CUDA graphs matter so much.
+
+> **This framing is the Iron Law from [Machine Learning Systems](https://mlsysbook.ai/) (Harvard CS249r).** It is the same decomposition as the five questions above, stated as one equation — use whichever makes the problem obvious.
+
+> **This framework is adapted from Bojie Li's [ai-infra-book](https://github.com/bojieli/ai-infra-book), which derives LLM system design from hardware constraints and uses these five questions as its throughline. If you want this reasoning developed at book length, with worked derivations and companion calculation tools, read it.**
+
+---
+
 ## 1. The memory hierarchy (memorize the shape)
 
 Every performance problem is a data-movement problem. These are approximate 2026 figures for a high-end GPU node:
@@ -400,3 +463,13 @@ Before you buy or reserve anything, write down:
 - [ ] **Exit plan**: portability (vLLM/K8s/ONNX) so you're never locked in
 
 **Next:** [cheatsheets/inference-math.md](cheatsheets/inference-math.md) for the serving formulas, [cheatsheets/training-parallelism.md](cheatsheets/training-parallelism.md) for the parallelism decision table.
+
+---
+
+## Where to go deeper
+
+This file is a reference: formulas, tables, and the questions to ask. It deliberately stops short of full derivations. When you want the reasoning developed properly — where each constraint comes from, how the terms combine, and what the answer means for a real cluster — read:
+
+- [**AI Infra in Depth**](https://github.com/bojieli/ai-infra-book) (Bojie Li) — the quantitative treatment of everything above, from accelerator architecture to supernodes, datacenter networking, and edge-cloud placement. Twelve chapters, a calculation CLI you can run without a GPU, worked case studies, and 100+ experiments that keep their negative results. It is the closest thing this field has to *Computer Architecture: A Quantitative Approach*.
+- [**stas00/ml-engineering**](https://github.com/stas00/ml-engineering) — the debugging and operations half: what to do when the numbers do not match.
+- [**How to Scale Your Model**](https://jax-ml.github.io/scaling-book/) (Google) — scaling math from a single chip to a cluster, with a different (JAX-flavoured) framing that is worth comparing against this one.

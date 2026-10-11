@@ -164,7 +164,7 @@ One pick per layer. Boring, maintained, and overwhelmingly the community default
 | [**CAREERS.md**](CAREERS.md) | Roles, interviews, portfolio artifacts, breaking in, contributing | You want the job, not just the skill |
 | [**RESOURCES.md**](RESOURCES.md) | Courses, books, papers, blogs, newsletters, benchmarks, communities | You want depth |
 | [**GLOSSARY.md**](GLOSSARY.md) | 200+ terms, defined in one line | A word is thrown at you in a meeting |
-| [**cheatsheets/**](cheatsheets/) | Inference math · training parallelism · cluster ops · RL post-training · eval math | You need the formula *now* |
+| [**cheatsheets/**](cheatsheets/) | Inference math · training parallelism · cluster ops · RL post-training · eval math · systems thinking | You need the formula *now* |
 | [**CONTRIBUTING.md**](CONTRIBUTING.md) | How to add a project or fix a link | You want to improve this |
 
 ---
@@ -192,7 +192,7 @@ This repo complements the giants below. None of them is a substitute for the oth
 |---|---:|---|---|
 | [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19.4k | Deep, practical ML-engineering book (hardware, debugging, SLURM, reduction) | **Read it** alongside Stages 1-4. More depth, less ordering. |
 | [HuaizhengZhang/AI-Infra-from-Zero-to-Hero](https://github.com/HuaizhengZhang/AI-Infra-from-Zero-to-Hero) | 4.4k | Paper + industry-practice reading list per topic | The paper layer of [RESOURCES.md](RESOURCES.md), expanded |
-| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 6.2k | Quantitative derivation of LLM inference/training system design | The math in [HARDWARE.md](HARDWARE.md), taken much further |
+| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 6.2k | Quantitative derivation of LLM inference/training system design, from hardware constraints up | The math in [HARDWARE.md](HARDWARE.md), taken to book length: 12 chapters, a calculation CLI, and 100+ experiments. The single best companion to this repo |
 | [modular/llm-inference-handbook](https://github.com/modular/llm-inference-handbook) | 0.5k | Concise inference fundamentals | A good Stage 2 companion |
 | [ai-infra-curriculum/ai-infra-engineer-learning](https://github.com/ai-infra-curriculum/ai-infra-engineer-learning) | 1.8k | Structured curriculum for working infra engineers | Similar goal, less tooling/stack detail |
 | [deepseek-ai/open-infra-index](https://github.com/deepseek-ai/open-infra-index) | 8.1k | Production-tested infra tool index from a frontier lab | A second opinion on [STACK.md](STACK.md) |

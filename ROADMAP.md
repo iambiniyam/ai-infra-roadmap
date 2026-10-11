@@ -35,8 +35,21 @@ The most common reason people bounce off AI infra is not AI; it's that they can'
 | NVLink (H100) | ~900 GB/s per GPU | Intra-node tensor parallelism lives or dies here |
 | InfiniBand (NDR, per port) | ~50 GB/s | Inter-node all-reduce is ~18x slower than NVLink; this drives every multi-node design |
 
+### Estimate before you measure
+
+The habit that separates infra engineers from framework users is that they **write down a predicted number before running anything**. Not to be right, but to be *wrong in an informative way*: an estimate that is 3x off tells you which term you forgot.
+
+Before any benchmark in this repo, answer the five data-movement questions in [HARDWARE.md](HARDWARE.md#0-the-five-questions-start-here-every-time):
+
+> **What must move? How much? How many times? Through which interface? Who must wait for it?**
+
+Then compare against the memory hierarchy. **If your plan needs more bandwidth than an interface has, the plan is impossible** — and you learned that in five minutes with a pencil instead of a week with a profiler.
+
+This is a trainable skill, and it is trained by being wrong repeatedly in private. See Lab 0 below.
+
 ### Labs
 
+0. **Predict, then measure (do this one first).** Before running anything, write down five predictions with units: (a) the size of a 7B model in bf16, (b) peak tok/s decoding it on your GPU (bandwidth ÷ weight bytes), (c) your machine's memory bandwidth, (d) the time to read a 10 GB file from disk, (e) the time to send 1 GB over your network. Then measure all five. Score yourself: within 2x is competent, within 20% is good. **For every miss, name the term you forgot.** This single lab builds more intuition than any course, and it is the habit every later stage depends on.
 1. **Bytes by hand.** For a 7B-parameter model, compute the size in fp32 / bf16 / fp8 / int4. Then compute the *training* memory including gradients and Adam states. Then the *serving* memory including KV cache. Verify against reality with `torch.cuda.memory_summary()`.
 2. **Read a GPU.** Run `nvidia-smi -q`, `nvidia-smi dmon`, and `dcgmi dmon`. Identify power draw, memory used, SM utilization, and temperature under load.
 3. **Containerize with a GPU.** Write a `Dockerfile` that runs a torch program with CUDA access, run it with `--gpus all`, and prove `torch.cuda.is_available()` inside.
@@ -52,6 +65,8 @@ The most common reason people bounce off AI infra is not AI; it's that they can'
 | [Kubernetes docs + "Kubernetes the Hard Way"](https://github.com/kelseyhightower/kubernetes-the-hard-way) | Understand K8s instead of cargo-culting it |
 | [Brendan Gregg: Systems Performance](https://www.brendangregg.com/systems-performance-2nd-edition-book.html) | The USE method; free chapters online |
 | [Latency Numbers Every Programmer Should Know](https://gist.github.com/jboner/2841832) | Memorize these |
+| [Machine Learning Systems (CS249r)](https://mlsysbook.ai/) | Harvard's open textbook. Free, broadest curriculum here; pairs with Stage 0's estimation habit |
+| [Systems thinking cheatsheet](cheatsheets/systems-thinking.md) | Little's Law, the utilization trap, Amdahl, and the critical path |
 | [Stanford CS336: Language Modeling from Scratch](https://stanford-cs336.github.io/) | Start watching now; it pays off in Stage 1 |
 
 ### Exit criteria
@@ -60,8 +75,13 @@ The most common reason people bounce off AI infra is not AI; it's that they can'
 - You can run a GPU container and show `nvidia-smi` output from inside it.
 - You know your machine's memory bandwidth, disk bandwidth, and PCIe generation.
 - You can look at a stuck process and say whether it's CPU-, memory-, IO-, or GPU-bound.
+- **You predicted five numbers before measuring them and got them within 2x**, and for each miss you can name the term you forgot.
+- **You can answer the five data-movement questions for any workload** (what moves, how much, how many times, through which interface, who waits) and say which interface is the binding constraint.
+- Given a proposed design, you can rule it out in under five minutes if it exceeds a bandwidth or capacity limit.
 
 **Common trap:** collecting courses. Do the labs; skip anything that doesn't end in a number.
+
+**The deeper trap:** measuring before predicting. A benchmark tells you *what* happened; an estimate tells you *why*, and whether you are near the physical limit or 5x away from it. Engineers who only measure can optimize a system that was never the bottleneck.
 
 ---
 
@@ -169,6 +189,7 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 | [Databricks: LLM Inference Performance Engineering](https://www.databricks.com/blog/llm-inference-performance-engineering-best-practices) | Real numbers and best practices |
 | [Anyscale: Continuous batching & serving](https://www.anyscale.com/blog/continuous-batching-llm-inference) | Understand the scheduler |
 | [vLLM `benchmarks/`](https://github.com/vllm-project/vllm/tree/main/benchmarks) | Steal their methodology |
+| [Systems thinking cheatsheet](cheatsheets/systems-thinking.md) | Little's Law for fleet sizing, and why 95% utilization destroys your tail |
 
 ### Exit criteria
 
@@ -177,6 +198,8 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 - You explain PagedAttention and continuous batching without notes.
 - Given two GPUs with different interconnects, you predict scaling efficiency.
 - You can read an `nsys` trace and point at the communication bottleneck.
+- **You size a fleet from an arrival rate and an SLO** using Little's Law, and state what headroom you added and why.
+- **You can explain why running at 95% utilization is a latency decision, not an efficiency win**, with the multiplier.
 
 **Common trap:** optimizing tok/s at batch 512 when your users are chatting at concurrency 5. Optimize for *your* workload's SLO, then look at cost.
 
@@ -360,6 +383,7 @@ At this stage the bottleneck stops being technical and becomes organizational: f
 - [ ] **Serving architecture at scale:** disaggregation, KV-cache-aware routing, SLO-aware autoscaling, cascades, speculative decoding, cache-aware load balancing
 - [ ] **Modern model shapes:** MoE, long context (ring/sequence parallel, sparse or linear attention), multimodal towers, and their infra implications
 - [ ] **Hardware co-design:** read a chip datasheet (HBM, SRAM, TMA/TC, interconnect) and shape the algorithm to it
+- [ ] **Placement and the edge:** deciding what runs on-device, at the edge, or in the cloud — comparing *total task time* (transfer + compute + round trips) rather than model latency, and knowing when the network dominates
 - [ ] **Benchmarking rigor:** MLPerf/InferenceMAX methodology, warmup, thermal effects, tail latency, statistical honesty
 - [ ] **Research literacy:** read and reproduce MLsys/OSDI/NSDI/SOSP/SC/ICML results
 - [ ] **Leverage:** design docs, incident reviews, mentoring, vendor strategy, and knowing when *not* to build
@@ -371,6 +395,7 @@ At this stage the bottleneck stops being technical and becomes organizational: f
 3. **2x the economics.** Cut $/1M tokens by 2x at a fixed SLO without changing hardware. Write the design doc and the rollback plan.
 4. **Red-team your own endpoint.** Run `garak` + `promptfoo` against a deployed service. Fix the top 3 findings and re-test.
 5. **Design a big cluster.** Spec a 4,096-GPU (or largest defensible) cluster: topology, network, storage, power, failure domains, scheduler, and a cost model.
+6. **Place the computation.** Take one multimodal task (image editing, speech, or a screenshot agent). Model total task time as `transfer + compute + round trips` for three placements: on-device, edge, cloud. Then measure it on real hardware. **Report the crossover point where moving to the cloud stops paying**, and what happens to that point when you speed the model up 10x. (This is the Amdahl's-law argument for the edge: past a certain point, optimizing the model buys nothing, and the network is the whole problem.)
 
 ### Free resources
 

@@ -87,6 +87,46 @@ Example: 2×H100 node @ $5.00/hr, 1,500 output tok/s
 7. **Disaggregation**: better TTFT under long-prompt traffic; not always a win.
 8. **Hardware mix**: cheap cards for cheap models; don't brute-force with H100s.
 
+### Cost per token is the wrong unit for agents
+
+`$/1M tokens` is a *supplier* metric. Once you have a multi-turn agent, the metric the business cares about is **cost per successful task**, and the two diverge sharply.
+
+```text
+C_task = C_attempt / p_success
+
+For a k-step agent:  p_task = p_step^k   →   C_task = C_attempt / p_step^k
+```
+
+**That exponent is the whole story of agentic cost, and it is brutal:**
+
+| Steps `k` | 99% per step | 98% per step | 95% per step |
+|---:|---:|---:|---:|
+| 4 | 96% | 92% | 82% |
+| 8 | 92% | 85% | 66% |
+| 12 | 89% | 79% | 54% |
+| 20 | 82% | 67% | 36% |
+| 40 | 67% | 45% | 13% |
+
+A 95%-reliable step yields a **54%** task success rate over 12 turns. **For agents, reliability engineering *is* cost engineering** — and it is usually a bigger lever than any inference optimization.
+
+**Where the money actually goes.** Worked for a 12-turn RAG agent (34k input, 1.8k output tokens, 12 tool calls, 44 GPU-seconds, 78% success):
+
+| Component | Cost | Share |
+|---|---:|---:|
+| Input tokens | $0.0102 | 2.2% |
+| Output tokens | $0.0022 | 0.5% |
+| Tool calls | $0.1320 | 27.8% |
+| **Self-hosted GPU time** | **$0.3300** | **69.6%** |
+| **Per attempt** | **$0.4744** | |
+| **Per success** (÷ 0.78) | **$0.6082** | |
+
+**Token cost is 2.6% of the task.** Most AI-cost discourse is about token pricing; for agentic workloads it is a rounding error. GPU time dominates, and the retry penalty adds 28%.
+
+**Two disciplines when you build a cost model:**
+
+1. **Use utilization-adjusted cost.** A GPU at $2.50/hr running at 58% utilization costs `$2.50 / 0.58 = $4.31` per *productive* hour — **72% above list price**. Mixing list price and effective price in one model double-counts and shifts payback by ~1.7x. State your convention.
+2. **Say whether savings are cash or capacity value.** A saving becomes *cash* only if you actually release the node; otherwise it is redeployable capacity. Conflating the two is the most common error in AI cost modeling.
+
 ---
 
 ## 5. Tuning order (do it in this sequence)

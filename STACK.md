@@ -341,7 +341,7 @@ Not part of the runtime stack, but they *teach* it. See [RESOURCES.md](RESOURCES
 | Project | Stars | License | Notes |
 |---|---:|---|---|
 | [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19,446 | CC-BY-SA-4.0 | The best free book on the engineering/debugging side of ML. |
-| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 6,216 | Apache-2.0 | Quantitative derivation of inference/training system design (zh, with tooling). |
+| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 6,217 | Apache-2.0 | Quantitative derivation of inference and training system design from hardware constraints (zh; community EN/ZH-TW/RU). Ships a calculation CLI and 100+ experiments. The deepest free treatment of this repo's math. |
 | [HuaizhengZhang/AI-Infra-from-Zero-to-Hero](https://github.com/HuaizhengZhang/AI-Infra-from-Zero-to-Hero) | 4,422 | MIT | Reading list of systems papers + industry practice. |
 | [deepseek-ai/open-infra-index](https://github.com/deepseek-ai/open-infra-index) | 8,077 | CC0-1.0 | Production-tested infra tool index from a frontier lab. |
 | [mryab/efficient-dl-systems](https://github.com/mryab/efficient-dl-systems) | 1,041 | MIT | Free course on efficient deep-learning systems. |
