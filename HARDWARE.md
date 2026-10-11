@@ -407,6 +407,32 @@ Now vary each lever and re-price: fp8 KV cache (+memory → +batch → +throughp
 
 Break-even is usually **2-4x** in favor of ownership at high utilization, but only if you can staff the platform. Count the humans.
 
+### 9.4 Should you upgrade to the next generation?
+
+The question every fleet owner faces, and the one most often answered by benchmarking the new part on a *microbenchmark* rather than the actual workload. The decision has four inputs, and the naive version uses only the first:
+
+| Input | What to measure | Why it can sink the upgrade |
+|---|---|---|
+| **Perf delta on your workload** | Not the datasheet — your model, your context length, your batch | A 2x FP4 gain is worthless if your workload is FP8-bound or bandwidth-bound |
+| **Utilization** | Current achieved utilization | An upgrade that doubles throughput on a fleet at 30% utilization saves nothing you can cash |
+| **Migration cost** | Kernel/library/toolchain readiness, requalification, retraining | Often the real cost, and it is engineer-months |
+| **Residual value** | What the old fleet is worth (resale or redeployed to cheaper work) | Ignoring it overstates the upgrade's cost |
+
+```text
+Net benefit = (Δperf × utilization × current_spend)
+            − migration_cost
+            − (residual_value_foregone)
+
+Upgrade only if Net benefit > 0 AND the perf delta applies to your bottleneck.
+```
+
+**The two failure modes:**
+
+1. **Upgrading for a bottleneck you do not have.** If you are memory-bandwidth-bound on decode and the new part's win is FP4 compute, your speedup is ~1x and you paid full price. Check which term of the Iron Law the new hardware actually improves (Section 0).
+2. **Upgrading a fleet you are not using.** Doubling throughput on 30%-utilized hardware improves a number nobody is constrained by. **Fix utilization before buying capacity** — it is cheaper and it is the same win.
+
+**The honest default:** if your workload is bandwidth-bound and the new generation's gain is also bandwidth (HBM capacity/bandwidth), the upgrade usually pays. If the gain is a *format* (FP4/FP6) or *sparsity* your workload cannot exploit, benchmark before believing it.
+
 **The self-host-vs-API decision, stated honestly.** Self-hosting beats an API only when you clear the fixed costs:
 
 | Situation | Usually wins |

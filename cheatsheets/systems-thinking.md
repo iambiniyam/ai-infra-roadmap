@@ -235,16 +235,36 @@ Every formula above takes a **mean**. Real workloads are heavy-tailed, and for t
 
 ---
 
-## 6. The measurement trap: sampling and noise
+## 6. Measurement traps: how to fool yourself
 
-Anything you conclude from a benchmark should survive this checklist:
+Most "we made it 3x faster" claims are measurement artifacts. These are the specific ways it happens, each with the fix:
 
-- **Warmup:** discard the first iterations (CUDA JIT, caches, clocks ramping).
-- **Repetitions:** run ≥ 5, report the spread, not one number.
-- **The noise floor:** run the *same* config twice. The gap between them is the smallest change you can detect. Any improvement below it is not an improvement.
+| Trap | What goes wrong | The fix |
+|---|---|---|
+| **CUDA asynchrony** | You time a kernel launch, not the kernel. Python returns immediately; the work has not started | `torch.cuda.synchronize()` before stopping the timer |
+| **No warm-up** | First iterations include JIT compilation, allocator growth, clock ramp. Including them can *flatter or ruin* your result depending on which side you measure | Discard the first N iterations, and say what N was |
+| **Profiler overhead** | `nsys`/`torch.profiler` can slow the workload 2-10x and shift which kernel dominates | Use it to find *relative* shares, not absolute times |
+| **Lost in the trace** | Thousands of events make the real cost invisible | Filter with NVTX ranges around what you care about |
+| **DVFS / thermals** | The GPU clocks down under sustained load; a short benchmark runs at boost | Run long enough to reach steady state; report clocks |
+| **FP non-associativity** | Different reduction order gives different results run to run | Compare with a tolerance and a seed, not `==` |
+| **GIL-bound load generator** | Your Python client saturates one core and becomes the bottleneck, so you measure the client, not the server | Check client CPU; use a compiled/async generator |
+| **Ignoring EOS** | "max_tokens" is a *cap*, not a promise. Fixed-length benchmarks overstate throughput because real traffic stops early | Use `min_tokens`/`ignore_eos` for throughput runs, and say so |
+| **Synthetic uniformity** | A load generator with `stddev=0` produces a workload no user ever creates: no long tail, no burstiness | Generate from a measured distribution, or replay a real trace |
+| **Client-side queueing** | At high concurrency, requests queue in the *client* before reaching the server | Measure arrival at the server, not departure from the client |
+
+**The meta-trap: Goodhart's Law.** Once a metric becomes a target, it stops measuring what you wanted. Throughput at the cost of the p99 SLO; MFU at the cost of correctness; eval score at the cost of generalization. **Always pair a metric with the constraint it must not violate.** "1,800 tok/s *at p95 TTFT < 500 ms*" is a real result; "1,800 tok/s" is a number looking for a way to mislead you.
+
+**The checklist before you believe any number:**
+
+- **Warmup:** discarded, and you said how much.
+- **Repetitions:** ≥5, with the spread reported, not one run.
+- **The noise floor:** run the *same* config twice. The gap is the smallest change you can detect. Any improvement below it is not an improvement.
 - **Isolate variables:** change one thing. If you changed two and it got faster, you learned nothing about either.
-- **State the conditions:** shared GPU? thermal state? which clock? These change results by tens of percent.
-- **Report negative results.** "I tried X and it made things worse" is data. The best sources in [RESOURCES.md](../RESOURCES.md) keep theirs; so should you.
+- **State the conditions:** shared GPU? thermal state? which clocks? These move results by tens of percent.
+- **Name the constraint:** what must this not break?
+- **Report negative results.** "I tried X and it made things worse" is data. The best sources in [RESOURCES.md](../RESOURCES.md) publish their misses; so should you.
+
+> **The highest form of this discipline is a "recorded miss."** An honest benchmark harness states which of its own targets it failed. A source that only publishes wins is telling you about its marketing, not its method.
 
 ---
 
