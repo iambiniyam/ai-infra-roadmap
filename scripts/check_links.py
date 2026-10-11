@@ -17,12 +17,32 @@ import argparse
 import concurrent.futures as futures
 import pathlib
 import re
+import shutil
+import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 URL_RE = re.compile(r"https?://[^\s\)\]\"<>`]+")
+
+# Network errors that mean "we could not reach it", not "it is gone". These get
+# retried and, if they persist, reported as warnings instead of failures --
+# otherwise one transient TLS reset reddens CI on a perfectly live link.
+TRANSIENT = (
+    "URLError",
+    "TimeoutError",
+    "ConnectionResetError",
+    "RemoteDisconnected",
+    "IncompleteRead",
+    "SSLError",
+    "ssl.SSLError",
+    "socket.timeout",
+    "http.client.RemoteDisconnected",
+)
+
+RETRIES = 3
 
 # Hosts that aggressively block automated requests; we can't tell rot from policy.
 SKIP_HOSTS = (
@@ -64,7 +84,7 @@ def urls(files: list[pathlib.Path], only_github: bool) -> dict[str, set[str]]:
     return found
 
 
-def probe(url: str) -> tuple[str, int | str]:
+def probe_once(url: str) -> tuple[str, int | str]:
     for method in ("HEAD", "GET"):
         req = urllib.request.Request(url, method=method, headers={"User-Agent": UA})
         try:
@@ -79,6 +99,44 @@ def probe(url: str) -> tuple[str, int | str]:
                 continue
             return url, type(exc).__name__
     return url, "unreachable"
+
+
+def curl_probe(url: str) -> int | str:
+    """Fall back to curl, whose TLS stack handles more hosts than Python's."""
+    if not shutil.which("curl"):
+        return "unreachable"
+    try:
+        proc = subprocess.run(
+            ["curl", "-sSL", "-o", "/dev/null", "-w", "%{http_code}",
+             "--max-time", "30", "-A", UA, url],
+            capture_output=True,
+            text=True,
+            timeout=45,
+        )
+        code = proc.stdout.strip()
+        return int(code) if code.isdigit() and code != "000" else "unreachable"
+    except Exception:  # noqa: BLE001
+        return "unreachable"
+
+
+def probe(url: str) -> tuple[str, int | str, bool]:
+    """Return (url, status, is_transient).
+
+    Retries transient failures with backoff, then tries curl, so a live link is
+    not reported as broken because of one flaky handshake.
+    """
+    status: int | str = "unreachable"
+    for attempt in range(RETRIES):
+        _, status = probe_once(url)
+        if isinstance(status, int):
+            return url, status, False
+        if status not in TRANSIENT and status != "unreachable":
+            return url, status, False
+        time.sleep(1.5 * (attempt + 1))
+    code = curl_probe(url)
+    if isinstance(code, int):
+        return url, code, False
+    return url, status, True
 
 
 def main() -> int:
@@ -98,19 +156,22 @@ def main() -> int:
     failures: list[tuple[str, object, set[str]]] = []
     warnings: list[tuple[str, object, set[str]]] = []
     with futures.ThreadPoolExecutor(max_workers=16) as pool:
-        for url, status in pool.map(probe, targets):
+        for url, status, transient in pool.map(probe, targets):
             ok = isinstance(status, int) and 200 <= status < 400
             if ok:
                 continue
             if isinstance(status, int) and status in allowed:
                 warnings.append((url, status, links[url]))
+            elif transient:
+                # Could not establish anything after retries and a curl fallback.
+                warnings.append((url, "unreachable", links[url]))
             elif status == "unreachable" and any(h in url for h in SKIP_HOSTS):
                 warnings.append((url, status, links[url]))
             else:
                 failures.append((url, status, links[url]))
 
     if warnings:
-        print(f"\n⚠️  {len(warnings)} warning(s) (bot-blocked, not necessarily dead):")
+        print(f"\n⚠️  {len(warnings)} warning(s) (bot-blocked or unreachable, not necessarily dead):")
         for url, status, where in warnings[:25]:
             print(f"  [{status}] {url}  ({', '.join(sorted(where))})")
 

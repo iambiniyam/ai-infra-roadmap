@@ -60,6 +60,7 @@ perfquery                        # error counters (watch for growth)
 | ECC (corrected/uncorrected) | Memory health | Any uncorrected; rising corrected |
 | NVLink error counters | Interconnect health | Any growth |
 | IB symbol/port errors | Fabric health | Any growth |
+| Per-rank step time vs median | **Fail-slow / straggler detection** | Any rank > 1.2x the median, sustained |
 | Job queue depth | Capacity pressure | Growing wait times |
 
 ---
@@ -137,6 +138,21 @@ kubectl get events -A --sort-by=.lastTimestamp | tail -50
 3. Storage contention during peak hours?
 4. A code/config change? Use git + config hashes.
 5. A degraded GPU whose clocks silently dropped?
+
+### "Job is running but much slower than it should be" (fail-slow)
+
+This is the most expensive and least visible failure mode on a GPU fleet, and it emits **no error at all**. A straggler GPU passes every health check while dragging the whole job. Studies of production clusters find most large jobs hit at least one straggler, producing tens of percent completion delay.
+
+Detection is **relative, never absolute**:
+
+1. Log per-rank step time; alert on **outliers vs the fleet median** (z-score), not on absolute thresholds.
+2. Per-GPU achieved TFLOPS or tokens/s during the run — a rank at 60% of median is your problem.
+3. Re-run `nccl-tests` on the suspect node and compare bus bandwidth against a known-good node.
+4. Check NVLink error counters and IB symbol errors on that specific node, not just cluster-wide totals.
+5. Check for clock throttling (`nvidia-smi -q -d PERFORMANCE`) that never tripped a thermal alarm.
+6. **Then** drain and re-test with `dcgmi diag -r 3`.
+
+> **Why this matters:** a clean fail-stop is cheap — the job dies, you restart, you lose minutes. A fail-slow job burns the *full* allocation while delivering half the work, and it typically only surfaces as "this run took 3 days instead of 2." Instrument for it explicitly, or you will pay for it without noticing.
 
 ### "A GPU failed mid-run"
 

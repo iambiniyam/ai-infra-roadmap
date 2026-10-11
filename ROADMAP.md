@@ -1,10 +1,10 @@
 # The Roadmap
 
-Six stages. Each one ends with **exit criteria**: concrete things you must be able to do before moving on. The stages compound: Stage 2 assumes you can profile; Stage 3 assumes you understand collectives.
+Six stages (plus a half-step on RL post-training). Each one ends with **exit criteria**: concrete things you must be able to do before moving on. The stages compound: Stage 2 assumes you can profile; Stage 3 assumes you understand collectives.
 
 > **How to read this file:** pick your stage, read only that section, build the matching project in [PROJECTS.md](PROJECTS.md), and come back when the exit criteria are true. Struggle first, search second, ask third.
 
-**Jump to:** [Stage 0](#stage-0-foundations) · [Stage 1](#stage-1-single-gpu-fluency) · [Stage 2](#stage-2-single-node-multi-gpu-and-real-serving) · [Stage 3](#stage-3-multi-node-training-and-distributed-inference) · [Stage 4](#stage-4-platform-engineering) · [Stage 5](#stage-5-frontier-performance-and-scale) · [Cross-cutting skills](#cross-cutting-skills)
+**Jump to:** [Stage 0](#stage-0-foundations) · [Stage 1](#stage-1-single-gpu-fluency) · [Stage 2](#stage-2-single-node-multi-gpu-and-real-serving) · [Stage 2.5](#stage-25-rl-post-training) · [Stage 3](#stage-3-multi-node-training-and-distributed-inference) · [Stage 4](#stage-4-platform-engineering) · [Stage 5](#stage-5-frontier-performance-and-scale) · [Cross-cutting skills](#cross-cutting-skills)
 
 ---
 
@@ -182,6 +182,64 @@ This one line explains GQA, prefix caching, paged attention, KV quantization, ch
 
 ---
 
+## Stage 2.5: RL post-training
+
+> **Goal:** run an RL post-training loop and know where the time and the money go — and why it is not just "training."
+> **Prereq:** Stage 2 (you need a rollout engine and a KV-cache intuition).
+> **Skip if:** you have measured the generation/training/weight-sync split on a real RL run.
+
+This sits between serving and multi-node for a reason: RL post-training is where the serving stack and the training stack get wired together, and the seams are the whole problem. See [cheatsheets/rl-post-training.md](cheatsheets/rl-post-training.md).
+
+Why it deserves its own stage: RL is no longer a fine-tuning footnote. It is where a large share of frontier compute now goes, and it has a genuinely different systems profile — a **rollout engine** (memory-bandwidth-bound generation), a **trainer** (compute-bound backprop), and a **verifier/sandbox tier**, feeding each other in a loop.
+
+### Skills checklist
+
+- [ ] **The two-workload model:** why rollout is bandwidth-bound and training is compute-bound, and why that difference drives every architectural choice
+- [ ] **RL algorithm memory:** PPO vs GRPO/DAPO in terms of *resident models*, and why dropping the critic is what made single-node RL feasible
+- [ ] **Rollout KV math:** the serving KV formula applied at long context and huge batch, and why generation saturates
+- [ ] **The skewness bubble:** right-skewed output lengths, batch collapse late in a round, and why RL makes it worse as it succeeds
+- [ ] **Colocated vs disaggregated:** resource coupling, and the economics of buying different silicon per stage
+- [ ] **Weight resharding:** what it concretely is, why it is on the critical path, and how it is optimized (fused engines, delta sync)
+- [ ] **Async/off-policy:** the asynchrony ladder, one-step async, and staleness correction
+- [ ] **Verifiers and sandboxes as infrastructure:** programmatic rewards, autoscaling sandboxes, isolation as a security boundary
+- [ ] **Agentic RL:** trajectories as the unit of work, environment servers, trajectory storage, and group-completion throughput
+- [ ] **RL observability:** separating `T_gen` / `T_train` / `T_sync`; P50 vs P99 trajectory latency
+
+### Labs
+
+1. **Reproduce the rollout bottleneck.** Run GRPO on a small model (1.5B-3B) with TRL, sweeping max completion length across roughly 1k/4k/8k/16k. Report the generation-time *fraction* and peak memory at each length. You should see the fraction climb steeply; if it does not, your task is not producing long CoTs.
+2. **Verify the KV formula under rollout.** Instrument a rollout engine across concurrency and context length. Predict KV with the formula, then compare. Report prediction error and show throughput saturating while KV grows linearly — that saturation is the bandwidth bound.
+3. **Measure the reshard tax.** Time the weight-update path as a fraction of iteration wall-clock, and bytes transferred per step. Compare a fused reshard against a naive full-materialization sync. This is the most under-taught number in RL infra.
+4. **Sync vs one-step async.** Run the same task synchronously and with one-step async. Report **both** the throughput speedup *and* the final-reward delta. The lesson is the combination; reporting only one proves nothing.
+5. **Quantify the long tail.** Sample a few hundred rollouts and histogram output lengths. Report P50/P95/P99 and estimate the fraction of decoding time spent at low batch occupancy. The mean-to-P99 gap is the bubble you must schedule around.
+6. **Wire up one environment.** Build a single environment (the free Colab path is fine), connect it to a trainer, and train a small multi-turn agent. Report **groups/hour** and mean vs P99 trajectory latency — and show that P99, not the mean, governs throughput.
+
+### Free resources
+
+| Resource | Why |
+|---|---|
+| [verl docs](https://verl.readthedocs.io/en/latest/) + [HybridFlow paper](https://arxiv.org/abs/2409.19256) | The architecture behind the ecosystem default |
+| [StreamRL](https://arxiv.org/abs/2504.15930) | The colocated-vs-disaggregated paper; resource coupling and the two bubbles |
+| [DeepSeekMath](https://arxiv.org/abs/2402.03300) | GRPO's original paper. Cite this, not R1, for the algorithm |
+| [DAPO](https://arxiv.org/abs/2503.14476) + [verl-recipe](https://github.com/verl-project/verl-recipe) | A reproducible large-scale RL recipe, end to end |
+| [TRL docs](https://huggingface.co/docs/trl/index) | The accessible path; RL on one GPU |
+| [OpenEnv docs](https://huggingface.co/docs/openenv) | Environment interface with a free tutorial |
+| [slime](https://github.com/THUDM/slime) + [its docs](https://thudm.github.io/slime/) | Smallest complete Megatron+SGLang loop; readable end to end |
+| [rllm docs](https://docs.rllm-project.com/) | Solver-judge workflow for agent RL |
+
+### Exit criteria
+
+- You report a `T_gen` / `T_train` / `T_sync` breakdown for a real RL run and say which one dominates.
+- You explain why generation saturates while training keeps scaling, using your own measured numbers.
+- You compute rollout KV for a given concurrency and context, and predict OOM before hitting it.
+- You can state the reshard as a percentage of iteration time.
+- You explain why optimizing per-GPU utilization can *reduce* agentic RL throughput.
+- You have both a throughput number and a quality number for a sync-vs-async comparison.
+
+**Common trap:** treating RL as "SFT with more steps." The moment you add a rollout engine you have a distributed systems problem with a scheduler, a data plane, and two different bottlenecks — plus a reward verifier that can become the bottleneck itself.
+
+---
+
 ## Stage 3: Multi-node training and distributed inference
 
 > **Goal:** cross the node boundary: the place where most people's intuition breaks.
@@ -243,14 +301,15 @@ At this stage the bottleneck stops being technical and becomes organizational: f
 
 ### Skills checklist
 
-- [ ] **Multi-tenancy:** quotas, fairness, gang scheduling, preemption, priorities, MIG partitioning, time-slicing, HAMi, and isolation guarantees
+- [ ] **Multi-tenancy:** quotas, fairness, gang scheduling, preemption, priorities, MIG partitioning, time-slicing, HAMi, and what isolation you can and *cannot* actually guarantee
 - [ ] **Compute supply:** reserved vs on-demand vs spot, autoscaling (Karpenter), gang scheduling for training, and capacity planning with headroom math
 - [ ] **Storage architecture:** object store + parallel FS + caching tiers, the many-small-files problem, and checkpoint-write bandwidth
 - [ ] **Data platform:** lakehouse formats (Iceberg/Delta/Lance/Hudi), batch vs streaming, feature stores, labeling workflows, dataset versioning and lineage
 - [ ] **MLOps lifecycle:** experiment tracking → registry → lineage → reproducible pipelines → rollout/rollback, with CI/CD for models
 - [ ] **Observability:** metrics (DCGM/Prometheus/Grafana), distributed traces (OTel → Langfuse/Phoenix), logs, and AI-specific SLOs
 - [ ] **FinOps:** $/GPU-hour, utilization vs allocation, idle waste, right-sizing, cost per 1M tokens, chargeback/showback
-- [ ] **Security & governance:** SBOM/Sigstore model supply chain, secrets, network policy, tenant isolation, provenance, egress control, audit
+- [ ] **Security & governance:** model supply chain (safetensors over pickle, scanning, Sigstore/SBOM), secrets, network policy, tenant isolation, egress control, audit, and the OWASP LLM Top 10 (2026 reordering: **Excessive Agency moved up to LLM03**; System Prompt Leakage became Hidden Context Exposure)
+- [ ] **Cache-level side channels:** content-addressed prefix caches can be shared across tenants, and a cache hit leaks the existence of another tenant's prompt prefix. Know when your KV/prefix cache crosses a trust boundary.
 - [ ] **Reliability:** SLO/SLI, error budgets, DR, capacity headroom, incident response, and model-regression rollback
 
 ### Labs
@@ -259,8 +318,9 @@ At this stage the bottleneck stops being technical and becomes organizational: f
 2. **Cost dashboard that changes a decision.** Build $/1M tokens per endpoint and $/GPU-hour by team. Use it to kill or right-size one workload. Write the before/after.
 3. **Data lake for multimodal.** Object store + Iceberg or Lance + Ray Data preprocessing. Report throughput (GB/s) and $/TB processed.
 4. **Ship with gates.** CI/CD: train → eval gate → registry → canary → automated rollback. Define the eval threshold that blocks a release.
-5. **Prove isolation.** Demonstrate a runaway tenant cannot starve a neighbor (quotas + gang scheduling + preemption). Show the metrics.
+5. **Prove isolation — and find its limits.** Demonstrate a runaway tenant cannot starve a neighbor (quotas + gang scheduling + preemption). Then attack your own boundary: show what a co-tenant *can* still learn (timing, cache residency, launch patterns). Write the honest residual-risk statement.
 6. **Write the SLOs.** Define SLIs/SLOs/error budgets and a capacity plan. Simulate a 30% capacity loss and show what breaks.
+7. **Red-team the supply chain.** Take an untrusted model artifact and a malicious one; show that your loading path (`torch.load` with `weights_only=False`, or a pickled checkpoint) executes code, then switch to safetensors and add scanning + provenance verification to the pipeline.
 
 ### Free resources
 
@@ -273,6 +333,7 @@ At this stage the bottleneck stops being technical and becomes organizational: f
 | [MLFinOps / DCGM + Prometheus](https://github.com/NVIDIA/dcgm-exporter) | GPU telemetry you can chart |
 | [FinOps Foundation](https://www.finops.org/framework/) | The vocabulary your finance team uses |
 | [CNCF Landscape](https://landscape.cncf.io/) | Where the platform pieces come from |
+| [Eval math cheatsheet](cheatsheets/eval-math.md) | How many samples your eval needs, and why pass@k lies |
 
 ### Exit criteria
 
@@ -340,6 +401,7 @@ These are not a stage. They're multipliers that start at Stage 2 and never stop.
 | **Measurement** | Every claim has a number, a config, and a date | Stage 1 |
 | **Cost modeling** | You can price a workload before you build it | Stage 2 |
 | **Reliability** | You design for failure, not around it | Stage 3 |
+| **Throughput accounting** | You can name where every millisecond of a step goes and defend the split | Stage 2.5 |
 | **Security** | Supply chain, isolation, and prompt-injection are in your threat model | Stage 4 |
 | **Writing** | A one-page design doc beats a two-hour meeting | Stage 1 |
 | **Teaching** | You can explain PagedAttention to a smart backend engineer | Stage 2 |

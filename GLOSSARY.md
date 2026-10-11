@@ -28,7 +28,7 @@ Over 200 terms, one line each, grouped by layer. Alphabetical within groups.
 - **Fat-tree**: A common non-blocking network topology for clusters.
 - **Rail-optimized**: Wiring where each GPU talks to a matching NIC, minimizing hops.
 - **Oversubscription**: Network links share bandwidth (e.g. 3:1). Raises cost efficiency, lowers worst-case bandwidth.
-- **MIG**: Multi-Instance GPU: partition one physical GPU into isolated slices.
+- **MIG**: Multi-Instance GPU: partitions one physical GPU into slices with dedicated L2/memory. **Partitioning is not a proven security boundary** — a 2026 USENIX Security paper demonstrates cross-instance L2 side channels via memory barriers. Treat MIG as resource partitioning, not as tenant isolation.
 - **Time-slicing**: Sharing a GPU by context switching. Cheap, but workloads interfere.
 - **NUMA**: Non-uniform memory access; CPU/memory locality that matters for data loading.
 - **TDP / power cap**: Thermal design power; capping power trades throughput for watts.
