@@ -4,15 +4,10 @@ on:
   schedule:
     - cron: "17 4 * * 1"   # Mondays, 04:17 UTC
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - "STACK.md"
-      - "README.md"
-      - "scripts/refresh_stars.py"
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   refresh:
@@ -29,14 +24,29 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 scripts/refresh_stars.py
 
-      - name: Commit if changed
+      - name: Open a PR if counts changed
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if git diff --quiet; then
             echo "Star counts already current."
             exit 0
           fi
+
+          branch="chore/refresh-stars"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
           git add -A
-          git commit -m "chore: refresh star counts [skip ci]"
-          git push
+          git commit -m "chore: refresh star counts"
+          git push --force origin "$branch"
+
+          # Reuse the open PR if there is one, otherwise open it.
+          if gh pr view "$branch" >/dev/null 2>&1; then
+            echo "Updated existing PR for $branch."
+          else
+            gh pr create \
+              --title "chore: refresh star counts" \
+              --body "Automated weekly refresh of star counts in STACK.md and README.md." \
+              --base main --head "$branch"
+          fi
