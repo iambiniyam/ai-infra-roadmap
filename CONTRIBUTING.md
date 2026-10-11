@@ -64,13 +64,30 @@ python3 scripts/check_links.py --only-github
 
 # 2. Refresh star counts
 GITHUB_TOKEN=$(gh auth token) python3 scripts/refresh_stars.py
+
+# 3. Check archive/license/maintenance claims against the live API
+GITHUB_TOKEN=$(gh auth token) python3 scripts/check_health.py
 ```
+
+CI runs all of these plus the internal anchor checker on every PR.
+
+### What the health checker enforces
+
+`check_health.py` implements the rules above automatically, because a curated stack rots silently:
+
+- **Archived projects must say so in their own note.** Archiving is not an automatic removal — several entries here are archived-but-canonical (`AutoGPTQ`, `TGI`) or finished works (`llm.c`). The rule is **disclosure, not deletion**: if it is archived, the note must admit it and point at a maintained alternative.
+- **Quiet projects** (no push in ~9 months) should be noted or replaced. Stable-and-complete teaching repos are fine; note them as such.
+- **License cells must match the SPDX id** the GitHub API reports.
+- **Links must resolve** — no 404s or stale slugs after a rename.
+
+A stale GitHub slug is the fastest way to lose a reader's trust, and org renames are common in this ecosystem (for example, `verl` moved to the `verl-project` org in 2026). Always use the canonical owner.
 
 Then:
 
 - Keep the diff focused. One logical change per PR.
 - Don't renumber existing projects or reorder stages in a drive-by PR; open an issue first.
 - Match the existing voice: direct, concrete, and allergic to hype.
+- **Cite primary sources for factual claims.** If you assert a hardware spec, a benchmark number, or a paper result, link the datasheet, the paper, or the upstream repo. Verify arXiv IDs by fetching them — do not cite from memory.
 
 ## Style guide
 
@@ -78,6 +95,7 @@ Then:
 - **State the tradeoff.** Every recommendation should say when it *doesn't* apply.
 - **No marketing language.** "Blazing fast" is noise; "2.3x lower p99 TTFT in our benchmark" is signal.
 - **Mark uncertainty.** If something is version-dependent or rumored, say so.
+- **Separate durable from volatile.** Formulas and ratios last; product names and prices rot. Date-stamp the volatile ones.
 - **Keep lines readable.** Tables over walls of text.
 
 ## Reporting problems

@@ -15,7 +15,7 @@ Seventeen buildable projects, ordered by difficulty. Each one maps to a stage in
 
 ---
 
-## Stage 1 · Foundations of one GPU
+## Stage 0-1 · Foundations and one GPU
 
 ### P1 · GPU Report Card
 

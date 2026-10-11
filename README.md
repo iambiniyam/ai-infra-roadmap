@@ -9,7 +9,7 @@ Real tools, the math behind them, and projects you can build. All of it free.
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-[The map](#the-map) · [Entry points](#pick-your-entry-point) · [The 6 stages](#the-roadmap-in-6-stages) · [Stack](STACK.md) · [Projects](PROJECTS.md) · [Resources](RESOURCES.md)
+[The map](#the-map) · [Entry points](#pick-your-entry-point) · [The 6 stages](#the-roadmap-in-6-stages) · [Stack](STACK.md) · [Projects](PROJECTS.md) · [Careers](CAREERS.md) · [Resources](RESOURCES.md)
 
 </div>
 
@@ -26,14 +26,15 @@ This repo fixes the *ordering* problem.
 It gives you:
 
 1. **A map** of the whole stack, so you know what you don't know.
-2. **A 6-stage roadmap** with concrete exit criteria, so you always know your next step.
-3. **A curated stack** of over 200 open-source projects with live star counts and licenses, so you pick the boring, correct tool.
+2. **A 6-stage roadmap** (plus a half-step on RL post-training) with concrete exit criteria, so you always know your next step.
+3. **A curated stack** of 220+ open-source projects with live star counts and licenses, so you pick the boring, correct tool.
 4. **17 buildable projects** with acceptance criteria, because infra is learned with your hands.
 5. **The math**: the back-of-envelope formulas that separate people who *configure* systems from people who *design* them.
+6. **A career layer**, because a skill you cannot demonstrate is a hobby: roles, interview loops, portfolio artifacts, and how to break in.
 
 > **What this is not:** a list of every AI repo on Earth. Curation means exclusion. If a tool is here, it earned its place for a learner or a practitioner. Star counts in tables are refreshed weekly by a bot (see [`scripts/refresh_stars.py`](scripts/refresh_stars.py)), so you can trust them as a rough signal of health, not as a substitute for reading the docs.
 
-**Last full data refresh:** 2026-10-05.
+**Last full data refresh:** 2026-10-11.
 
 ---
 
@@ -47,6 +48,7 @@ It gives you:
 | **A data engineer** moving into AI data infrastructure | [Stage 2](ROADMAP.md#stage-2-single-node-multi-gpu-and-real-serving) → [Stage 4](ROADMAP.md#stage-4-platform-engineering) |
 | **A student / career switcher** with no infra background | [Stage 0](ROADMAP.md#stage-0-foundations) and do not skip it |
 | **A senior engineer** who wants to go deep on performance | [Hardware](HARDWARE.md) → [Stage 5](ROADMAP.md#stage-5-frontier-performance-and-scale) |
+| **Anyone who wants the job, not just the skill** | [Careers](CAREERS.md): roles, interviews, artifacts |
 
 ---
 
@@ -101,6 +103,9 @@ Start with [Unsloth](https://github.com/unslothai/unsloth) or [LlamaFactory](htt
 **"I have GPUs and no idea how to schedule them."**
 Start with [Cluster Ops Cheatsheet](cheatsheets/cluster-ops.md), then [SkyPilot](https://github.com/skypilot-org/skypilot) and [Slurm](https://github.com/SchedMD/slurm)/[Kueue](https://github.com/kubernetes-sigs/kueue).
 
+**"I want to train a reasoning model, not just fine-tune one."**
+Start with [TRL](https://github.com/huggingface/trl) for a GRPO run on one GPU, then read [the RL post-training cheatsheet](cheatsheets/rl-post-training.md) to learn why rollout, not training, is where your time goes. [Stage 2.5](ROADMAP.md#stage-25-rl-post-training) is written for you.
+
 **"I want to build agents that don't fall over."**
 Start with [LangGraph](https://github.com/langchain-ai/langgraph) + [LiteLLM](https://github.com/BerriAI/litellm) + [Langfuse](https://github.com/langfuse/langfuse). Traces before frameworks.
 
@@ -118,6 +123,7 @@ Each stage has exit criteria. Do not move on until you can hit them.
 | [**0**](ROADMAP.md#stage-0-foundations) | Foundations | Reading a profiler, reasoning in bytes, surviving Linux | You can predict memory and find a bottleneck |
 | [**1**](ROADMAP.md#stage-1-single-gpu-fluency) | Single-GPU fluency | Running, profiling, and fine-tuning on one GPU | You predict VRAM and throughput, and can compute a KV cache |
 | [**2**](ROADMAP.md#stage-2-single-node-multi-gpu-and-real-serving) | Multi-GPU and serving | Serving an LLM at a target latency and cost | You produce a latency-throughput curve and a $/1M-token figure |
+| [**2.5**](ROADMAP.md#stage-25-rl-post-training) | RL post-training | Running an RL loop and knowing where the time goes | You report a `T_gen`/`T_train`/`T_sync` split and predict rollout OOM |
 | [**3**](ROADMAP.md#stage-3-multi-node-training-and-distributed-inference) | Multi-node | Debugging a multi-node run and a disaggregated deployment | You can diagnose an NCCL hang to a rank and defend a parallelism plan |
 | [**4**](ROADMAP.md#stage-4-platform-engineering) | Platform | Operating a shared GPU cluster other teams trust | You defend a capacity plan and a cost dashboard that changed a decision |
 | [**5**](ROADMAP.md#stage-5-frontier-performance-and-scale) | Frontier | Owning performance and reliability at cluster scale | Your optimizations show up as numbers on a production dashboard |
@@ -155,9 +161,10 @@ One pick per layer. Boring, maintained, and overwhelmingly the community default
 | [**STACK.md**](STACK.md) | Over 200 projects across all 9 layers, with stars, license, and when to use each | You're choosing a tool |
 | [**HARDWARE.md**](HARDWARE.md) | Accelerators, interconnects, memory math, cluster design, $/token | You're sizing or buying |
 | [**PROJECTS.md**](PROJECTS.md) | 17 buildable projects with acceptance criteria | You learn by building |
+| [**CAREERS.md**](CAREERS.md) | Roles, interviews, portfolio artifacts, breaking in, contributing | You want the job, not just the skill |
 | [**RESOURCES.md**](RESOURCES.md) | Courses, books, papers, blogs, newsletters, benchmarks, communities | You want depth |
 | [**GLOSSARY.md**](GLOSSARY.md) | 200+ terms, defined in one line | A word is thrown at you in a meeting |
-| [**cheatsheets/**](cheatsheets/) | Inference math · training parallelism · cluster ops | You need the formula *now* |
+| [**cheatsheets/**](cheatsheets/) | Inference math · training parallelism · cluster ops · RL post-training · eval math | You need the formula *now* |
 | [**CONTRIBUTING.md**](CONTRIBUTING.md) | How to add a project or fix a link | You want to improve this |
 
 ---
@@ -183,16 +190,16 @@ This repo complements the giants below. None of them is a substitute for the oth
 
 | Resource | Stars | Best for | Overlap with this repo |
 |---|---:|---|---|
-| [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19.2k | Deep, practical ML-engineering book (hardware, debugging, SLURM, reduction) | **Read it** alongside Stages 1-4. More depth, less ordering. |
+| [stas00/ml-engineering](https://github.com/stas00/ml-engineering) | 19.4k | Deep, practical ML-engineering book (hardware, debugging, SLURM, reduction) | **Read it** alongside Stages 1-4. More depth, less ordering. |
 | [HuaizhengZhang/AI-Infra-from-Zero-to-Hero](https://github.com/HuaizhengZhang/AI-Infra-from-Zero-to-Hero) | 4.4k | Paper + industry-practice reading list per topic | The paper layer of [RESOURCES.md](RESOURCES.md), expanded |
-| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 5.9k | Quantitative derivation of LLM inference/training system design | The math in [HARDWARE.md](HARDWARE.md), taken much further |
+| [bojieli/ai-infra-book](https://github.com/bojieli/ai-infra-book) | 6.2k | Quantitative derivation of LLM inference/training system design | The math in [HARDWARE.md](HARDWARE.md), taken much further |
 | [modular/llm-inference-handbook](https://github.com/modular/llm-inference-handbook) | 0.5k | Concise inference fundamentals | A good Stage 2 companion |
 | [ai-infra-curriculum/ai-infra-engineer-learning](https://github.com/ai-infra-curriculum/ai-infra-engineer-learning) | 1.8k | Structured curriculum for working infra engineers | Similar goal, less tooling/stack detail |
 | [deepseek-ai/open-infra-index](https://github.com/deepseek-ai/open-infra-index) | 8.1k | Production-tested infra tool index from a frontier lab | A second opinion on [STACK.md](STACK.md) |
-| [liguodongiot/llm-action](https://github.com/liguodongiot/llm-action) | 25.1k | Huge practical LLM-engineering guide (zh/en) | Broad; useful reference, not a path |
-| [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 106.0k | Build a transformer from zero | The *model* half of Stage 1, which this repo skips |
-| [mlabonne/llm-course](https://github.com/mlabonne/llm-course) | 83.3k | Scientist / engineer / LLM tracks with notebooks | Overlaps Stages 0-1; we go deeper on infra |
-| [NirDiamant/agents-towards-production](https://github.com/NirDiamant/agents-towards-production) | 21.5k | Agent production patterns | Layer 7+8 depth |
+| [liguodongiot/llm-action](https://github.com/liguodongiot/llm-action) | 25.2k | Huge practical LLM-engineering guide (zh/en) | Broad; useful reference, not a path |
+| [rasbt/LLMs-from-scratch](https://github.com/rasbt/LLMs-from-scratch) | 106.4k | Build a transformer from zero | The *model* half of Stage 1, which this repo skips |
+| [mlabonne/llm-course](https://github.com/mlabonne/llm-course) | 83.5k | Scientist / engineer / LLM tracks with notebooks | Overlaps Stages 0-1; we go deeper on infra |
+| [NirDiamant/agents-towards-production](https://github.com/NirDiamant/agents-towards-production) | 21.6k | Agent production patterns | Layer 7+8 depth |
 
 **What we do differently:** a single progressive path with *exit criteria*, *the cluster-scale half of the stack* (scheduling, storage, interconnects, FinOps), and *live data* on every tool. Most resources stop at "here is a model" or "here are 400 repos." This one asks "how do you run it for a million users without setting money on fire?"
 

@@ -26,3 +26,8 @@ jobs:
 
       - name: Check GitHub links
         run: python3 scripts/check_links.py --only-github
+
+      - name: Check project health and licenses
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/check_health.py

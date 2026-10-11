@@ -4,6 +4,15 @@ Infra people are distinguished by one habit: they can predict the number before 
 
 > **Caveat:** vendor numbers move every generation and marketing FLOPs assume dense, ideal conditions. Treat the tables as orders of magnitude and *verify against the datasheet* before you sign a PO. The **formulas** are the durable part.
 
+> **Read every hardware number through this checklist.** Almost all hardware arguments in real meetings are actually disagreements about which of these six axes each person is quoting. Ask them explicitly:
+>
+> 1. **Which format?** bf16, fp8, fp4, mxfp4 — they differ by up to 4x on the same chip.
+> 2. **Dense or sparse?** Vendors quote sparse when it flatters. Sparsity needs a model that exploits it.
+> 3. **Per chip or per system?** "GB200 has 13.4 TB" means the 72-GPU rack, not one GPU.
+> 4. **Spec or usable?** Datasheet capacity is not addressable capacity (192 vs 186 GB, 288 vs 270 GB).
+> 5. **One-way or bidirectional?** PCIe, NVLink, and IB are all quoted both ways by different vendors.
+> 6. **Peak or sustained?** Thermal throttling and power caps are real; a 2 kW part in a 1.4 kW slot runs slower.
+
 ---
 
 ## 1. The memory hierarchy (memorize the shape)
@@ -14,38 +23,62 @@ Every performance problem is a data-movement problem. These are approximate 2026
 |---|---|---|---|---|
 | Registers | ~256 KB/SM | n/a | ~1 cycle | Hand-tuned kernels live here |
 | SRAM / L2 | 40-60 MB (L2) | ~10 TB/s | ~200 cycles | FlashAttention's whole trick is keeping tiles here |
-| HBM (GPU) | 80-192 GB | 3.0-8.0 TB/s | ~600 cycles | Bandwidth sets decode speed |
-| NVLink (intra-node) | n/a | 0.9-1.8 TB/s/GPU | n/a | The only "fast" place to do tensor parallelism |
-| PCIe Gen5 | n/a | 64 GB/s (x16) | n/a | 25x slower than NVLink. Avoid TP over PCIe. |
+| HBM (GPU) | 80-288 GB | 3.0-22 TB/s | ~600 cycles | Bandwidth sets decode speed |
+| NVLink (intra-node) | n/a | 0.9-3.6 TB/s/GPU | n/a | The only "fast" place to do tensor parallelism |
+| PCIe Gen5 | n/a | 63 GB/s (x16, one way) | n/a | ~14x slower than NVLink 4. Avoid TP over PCIe. |
 | InfiniBand NDR/XDR | n/a | 50/100 GB/s per port | ~1-2 µs | Inter-node collectives. The real cluster currency. |
 | Ethernet (RoCE 400G) | n/a | ~50 GB/s | ~2-5 µs | Cheaper fabric; tune it or you'll notice |
 | Local NVMe | 4-30 TB | 3-14 GB/s | ~100 µs | Checkpoint staging |
 | Shared parallel FS | PB scale | 100 GB/s to 1 TB/s aggregate | ~ms | Where checkpoints and datasets live |
 | Object store (S3) | unlimited | ~GB/s per client | ~10s of ms | Durable, cheap, never on the hot path |
 
-**The one ratio to remember:** NVLink (≈900 GB/s) ÷ InfiniBand (≈50 GB/s) ≈ **18x**. That ratio is why tensor parallelism stays inside a node and why pipeline/expert parallelism exist for crossing nodes.
+**PCIe nuance worth knowing:** PCIe 5.0 x16 encodes 32 GT/s × 16 lanes ÷ 8 = 64 GB/s, but 128b/130b line encoding makes the *effective* one-direction rate **63 GB/s** (126 GB/s bidirectional). Folklore quotes both. Know which one you're using: 63 is what a `cudaMemcpy` benchmark will actually approach.
+
+**The one ratio to remember:** NVLink (≈900 GB/s) ÷ InfiniBand NDR (≈50 GB/s) ≈ **18x**. That ratio is why tensor parallelism stays inside a node and why pipeline/expert parallelism exist for crossing nodes.
+
+> **But the 18x is not a law — it is a consequence of matched generations.** Scale-up (NVLink) bandwidth doubles *every* generation; scale-out (InfiniBand) per-port bandwidth doubles every *two*. So the ratio itself doubles each generation:
+>
+> | Pairing | Ratio |
+> |---|---|
+> | NVLink 4 (900 GB/s) ÷ IB NDR (50 GB/s) | 18x |
+> | NVLink 4 ÷ IB XDR (100 GB/s) | 9x |
+> | NVLink 5 (1800 GB/s) ÷ IB XDR | 18x |
+> | NVLink 6 (3600 GB/s) ÷ IB XDR | **36x** |
+>
+> This is the actual argument for rack-scale domains: as the ratio grows, the node boundary becomes more punishing, so vendors widen the "node" (NVLink domains of 72, then 144+ GPUs). Memorize the *mechanism*, not the constant.
 
 ---
 
 ## 2. Accelerators (approximate, dense, verify)
 
-| Chip | Memory | HBM BW | bf16 dense | Notable |
+| Chip | Memory | HBM BW | Dense compute | Notable |
 |---|---|---|---|---|
-| NVIDIA H100 SXM | 80 GB HBM3 | 3.35 TB/s | ~990 TFLOPS | The 2023-2025 workhorse for training and serving |
-| NVIDIA H200 | 141 GB HBM3e | 4.8 TB/s | ~990 TFLOPS | Same compute, way more memory & bandwidth → better for long-context serving |
-| NVIDIA B200 | 192 GB HBM3e | ~8 TB/s | ~2.2 PFLOPS | FP4/FP8 focus; big step on memory bandwidth |
-| NVIDIA GB200 NVL72 | 72 GPUs, 13.5 TB HBM | ~8 TB/s/GPU | n/a | Rack-scale domain; NVLink across 72 GPUs changes parallelism design |
-| NVIDIA L40S | 48 GB GDDR6 | 0.86 TB/s | ~360 TFLOPS (fp16) | Cheap inference/fine-tuning; weak interconnect |
-| AMD MI300X / MI325X | 192 GB / 256 GB HBM3 | ~5.3 TB/s | ~1.3 PFLOPS | Best $/GB memory for inference-heavy work |
-| Google TPU v5e / v5p | 16 / 95 GB | n/a | ~200 / ~460 TFLOPS | Cost-efficient at scale if you're XLA-native |
-| Google TPU v6e (Trillium) | 32 GB | n/a | ~900 TFLOPS | Current-gen TPU, strong perf/$ |
-| AWS Trainium2 | ~96 GB | n/a | ~FP8-focused | Cheapest $/token for some workloads; op coverage is the catch |
-| AWS Inferentia2 | 32 GB | n/a | n/a | Inference-only; good $ for standard models |
-| Intel Gaudi 3 | 128 GB HBM2e | ~3.7 TB/s | ~1.8 PFLOPS (fp8) | Cost play; software maturity is the risk |
-| Huawei Ascend 910B | 64 GB | n/a | n/a | Relevant in China; `vllm-ascend` and CANN ecosystem |
+| NVIDIA H100 SXM | 80 GB HBM3 | 3.35 TB/s | ~990 TF bf16 | The 2023-2025 workhorse for training and serving |
+| NVIDIA H200 | 141 GB HBM3e | 4.8 TB/s | ~990 TF bf16 | **Same compute die as H100 — only memory changed.** That is why H200 wins on long context and loses nothing |
+| NVIDIA B200 | 192 GB (186 usable) HBM3e | ~8 TB/s | ~2.25 PF bf16 / ~9 PF FP4 | FP4/FP8 focus; the format matters more than the number |
+| NVIDIA GB200 NVL72 | 72 GPUs, 13.4 TB usable HBM | ~8 TB/s/GPU | ~2.5 PF bf16/GPU | Rack-scale NVLink domain; the rack *is* the node |
+| NVIDIA B300 / GB300 | 288 GB (270-279 usable) HBM3e | ~8 TB/s | ~1.1x B200 | Blackwell Ultra. **Spec capacity ≠ usable capacity** |
+| NVIDIA Rubin / VR NVL72 | 288 GB HBM4 | ~22 TB/s | ~50 PF NVFP4 | NVLink 6 at 3.6 TB/s; ~2 kW/chip; **first 100% liquid-cooled arch** |
+| NVIDIA L40S | 48 GB GDDR6 | 0.86 TB/s | ~360 TF fp16 | Cheap inference/fine-tuning; **no NVLink**, so no TP |
+| NVIDIA RTX PRO 6000 | 96 GB GDDR7 | ~1.8 TB/s | — | Workstation/edge inference with big memory |
+| AMD MI300X / MI325X | 192 / 256 GB HBM3 | 5.3 / 6.0 TB/s | ~2.6 PF fp16 | Best $/GB memory for inference-heavy work |
+| AMD MI350X / MI355X | 288 GB HBM3e | 8 TB/s | — | CDNA 4; the credible non-NVIDIA large-memory option |
+| AMD MI400-series | 432 GB HBM4 | ~23 TB/s | ~40 PF MXFP4 | UALoE 72-GPU scale-up domain; open-standard answer to NVL72 |
+| Google TPU v5e / v5p | 16 / 95 GB | 1.6 / 2.76 TB/s | ~200 / ~460 TF bf16 | Cost-efficient at scale if you're XLA-native |
+| Google TPU v6e (Trillium) | 32 GB | — | ~900 TF | Previous-gen TPU |
+| Google TPU v7 (Ironwood) | 192 GB HBM3e | — | ~4.6 PF FP8 | 9,216-chip superpod; designed for inference-era scale |
+| AWS Trainium2 | ~96 GB | — | FP8-focused | Cheapest $/token for some workloads; op coverage is the catch |
+| AWS Trainium3 | 144 GB HBM3e | 4.9 TB/s | ~2.5 PF FP8 | AWS has converged on Trainium; **no Inferentia 3** |
+| Huawei Ascend 950PR/DT | 128 / 144 GB | up to 4 TB/s | — | Relevant in China; self-developed HBM; `vllm-ascend`/CANN |
 | Apple M-series | Unified | ~0.1-0.5 TB/s | n/a | MLX/ANE; great local dev, not a cluster |
 
-**How to pick:** training at scale → high HBM bandwidth *and* fast interconnect (H100/H200/B200). Serving with long context → HBM capacity and bandwidth (H200, MI300X). Cheap high-volume serving → whatever gives the best $/token *after* accounting for ops cost (L40S, Inferentia, Trainium).
+**How to pick:** training at scale → high HBM bandwidth *and* fast interconnect. Serving with long context → HBM capacity and bandwidth (H200, MI300X/MI350X). Cheap high-volume serving → the best $/token *after* accounting for ops cost (L40S, Trainium).
+
+**Three traps in every spec table, including this one:**
+
+1. **Format before FLOPs.** "2.2 PFLOPS" is meaningless without bf16/fp8/fp4 and dense/sparse. Prefer dense numbers; vendors quote sparse when it sounds better. FP4 is often ~4x the FP16 number on Blackwell-class parts — that is a format change, not a free speedup.
+2. **Spec capacity ≠ usable capacity.** A B200 is "192 GB" but ~186 GB is addressable; a B300 is "288 GB" but an HGX B300 exposes ~270 GB and a GB300 NVL72 ~279 GB. Datasheets and capacity planning use different numbers — know which you need.
+3. **"Supports" ≠ "accelerates."** A chip can *run* MXFP4 at MXFP8 speed. Ask what the silicon natively accelerates.
 
 ---
 
@@ -225,15 +258,57 @@ Consequences:
 | Power | 8×H100 nodes → liquid cooling at rack density; plan for 40-80 kW/rack |
 | Failure domains | Assume a GPU failure every few hours at 1,000+ GPUs; design for restart |
 
+### Power and density (the constraint that replaced silicon)
+
+Per-accelerator TDP has roughly **tripled in four years**: H100 ~700 W → B200 ~1,000 W → B300 ~1,400 W → Rubin ~2,000 W. Rack density went from <20 kW to **60-130 kW**, with exotic racks above 900 kW. At those densities **air cooling runs out of physical headroom** — this is a thermodynamics conclusion, not a vendor preference, and it is why every 2026 flagship rack is liquid-cooled.
+
+| Metric | Air era | Liquid era |
+|---|---|---|
+| Rack density | 10-30 kW | 60-130 kW |
+| PUE | 1.3-1.5 | 1.05-1.10 |
+| Racks per MW | many, spread out | 50-70% fewer |
+| Cooling share of build cost | modest | cold plates + CDUs dominate the mechanical budget |
+
+**The reframing that matters:** you can buy GPUs; you often cannot buy megawatts. Datacenter power, not silicon supply, is now the binding constraint on most new clusters — which makes **tokens per second per megawatt** (and $/1M tokens/MW) the honest efficiency metric. FLOPS/W is a chip spec; tokens/s/MW is a business metric, and it is the one to bring to a capacity review.
+
 ### Failure arithmetic
 
 ```text
-If a GPU has ~20,000 h MTBF, then:
-  1,000 GPUs → a failure every ~20 h
- 10,000 GPUs → a failure every ~2 h
+MTBF_cluster = MTBF_gpu / N
+
+Empirical anchor: Meta's Llama-3 405B run used 16,384 H100s for 54 days and
+logged 419 interruptions -- one every ~3 hours. That implies a per-GPU MTBF of
+roughly 50,000 GPU-hours. Check it:
+
+  16,384 GPUs -> 50,000 / 16,384  ≈ 3.1 h    (matches the observed ~3 h)
+ 100,000 GPUs -> 50,000 / 100,000 ≈ 0.5 h    (a failure every ~30 minutes)
+
+Breakdown of those 419 interruptions: GPU faults 30.1%, HBM3 17.2%,
+network 8.4%, CPU ~2%.  Note that ~47% is GPU+HBM, so "the GPU is fine" is
+usually the wrong first assumption.
 ```
 
-That number is why elastic training, frequent checkpoints, and node quarantine are not optional at scale.
+**How often should you checkpoint?** There is a closed form (Daly's model):
+
+```text
+optimal checkpoint interval = sqrt(2 × MTBF × checkpoint_write_time)
+```
+
+Worked at Llama-3 scale (~3 h MTBF): a 5-minute checkpoint write wants an
+interval near **42 minutes**; a 10-minute write wants ~**60 minutes**. The
+interval scales with the *square root* of write time, so making checkpoints 4x
+cheaper only halves the interval. Pure checkpoint overhead at the optimum is
+`2 × write_time / interval` — about 24% and 33% for those two cases, which is why
+real systems overlap the write with compute (async/sharded checkpointing) rather
+than pausing for it.
+
+**The failure mode that costs more than crashes: fail-slow (stragglers).** A failing-but-not-failed GPU emits no XID error. Studies of production clusters find a majority of large jobs hit stragglers, producing tens of percent completion delay and low-single-digit-percent wasted GPU-hours — larger in aggregate than clean fail-stop losses. Detection requires *relative* signals (step-time outliers across ranks, `nccl-tests` re-runs, per-GPU throughput z-scores), not health flags. Practical consequences:
+
+- Median utilization on real production fleets sits near **50%**, not 90%. Capacity plans built on 90% are fiction.
+- Effective training time >90% is achievable *with* frequent checkpointing and automated retry; auto-retry recovers far more than manual triage.
+- Checkpoint *restore* is often the slow step (tens of minutes), and it is frequently bottlenecked by metadata protocols (e.g. NFS RPC slot limits) rather than by network bandwidth.
+
+That is why elastic training, frequent checkpoints, and node quarantine are not optional at scale.
 
 ---
 
@@ -269,6 +344,23 @@ Now vary each lever and re-price: fp8 KV cache (+memory → +batch → +throughp
 
 Break-even is usually **2-4x** in favor of ownership at high utilization, but only if you can staff the platform. Count the humans.
 
+**The self-host-vs-API decision, stated honestly.** Self-hosting beats an API only when you clear the fixed costs:
+
+| Situation | Usually wins |
+|---|---|
+| Serving a popular open base model at low volume | **The API.** You cannot beat someone else's utilization at 10% of yours |
+| A fine-tuned or private model nobody hosts | **Self-hosting**, from day one — there is no alternative |
+| High sustained utilization (roughly >70%) on hardware you already own | **Self-hosting**, and the margin grows with scale |
+| Spiky or experimental demand | **The API**, unless latency/data residency forces otherwise |
+| Latency-critical or data-resident workloads | **Self-hosting**, regardless of unit economics |
+
+The reason is that an API provider amortizes across all their tenants' traffic and you amortize across yours. Your real levers are utilization, quantization, caching, and batching — not the hourly rate. **Cost per 1M tokens at a fixed SLO** is the metric; $/GPU-hour is just an input.
+
+**Two 2026 pricing facts that surprise people** *(volatile — verify before you budget)*:
+
+1. **Newest-generation silicon got *more* expensive per hour, not less.** Median on-demand rates for current-gen parts rose over 2024-2026 while previous-gen rates fell. Recency carries a premium; the $/hour curve is not monotonic in performance.
+2. **The spread between providers for the same GPU is large** — commonly 2-4x between hyperscaler list price and neocloud spot. For the same nominal hardware, two independent price trackers can differ by ~2x. Never budget from a single quoted number.
+
 ---
 
 ## 10. Numbers worth memorizing
@@ -278,15 +370,19 @@ Break-even is usually **2-4x** in favor of ownership at high utilization, but on
 | Bytes per param: fp32/bf16/fp8/int4 | 4 / 2 / 1 / 0.5 |
 | Training FLOPs per token per param | 6 |
 | Inference FLOPs per token per param | 2 |
-| H100 bf16 dense | ~990 TFLOPS |
+| H100 bf16 dense | ~990 TFLOPS (1,979 sparse — always say which) |
 | H100 HBM bandwidth | ~3.35 TB/s |
-| NVLink per-GPU bandwidth | ~0.9 TB/s (H100) |
-| InfiniBand NDR per port | ~50 GB/s |
+| NVLink per-GPU bandwidth | ~0.9 TB/s (NVLink 4) / 1.8 (5) / 3.6 (6) |
+| InfiniBand NDR / XDR per port | ~50 / ~100 GB/s |
+| PCIe Gen5 x16 effective, one way | ~63 GB/s |
 | H100 FP16/BF16 roofline crossover | ~295 FLOP/byte |
 | Chinchilla compute-optimal tokens | ~20 × params |
 | Practical tokens/param today | 100-1,000+ (way past Chinchilla) |
 | Good MFU for large training | 40-55% |
-| Good GPU utilization for serving | 30-70% (idle headroom is a feature) |
+| Median *production* GPU utilization | ~50% (plans built on 90% are fiction) |
+| Per-GPU MTBF, well-run fleet | ~50,000 GPU-hours |
+| Cluster MTBF | `MTBF_gpu / N` → 16k GPUs ≈ 3 h, 100k ≈ 30 min |
+| Optimal checkpoint interval | `sqrt(2 × MTBF × write_time)` |
 
 ---
 
